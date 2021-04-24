@@ -10,7 +10,12 @@ namespace Assets.Scripts.ProceduralSystem
             this.min = 0;
             this.max = 1;
         }
-        public override int getRandom()
+        public IntRangeValue(int min, int max)
+        {
+            this.min = min;
+            this.max = max;
+        }
+        public override int GetRandom()
         {
             return UnityEngine.Random.Range(min, max);
         }

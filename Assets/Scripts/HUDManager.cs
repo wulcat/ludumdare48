@@ -3,61 +3,99 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class HUDManager : MonoBehaviour
 {
+    public static HUDManager instance = null;
 
-    public GameObject health;
-    public GameObject ammo;
-    int hp;
-    int ammoAmount;
+    public TMP_Text health;
+    public TMP_Text ammo;
+    public GameObject pauseMenu;
+    public TMP_Text startMuteText;
 
-    // Start is called before the first frame update
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
+        DontDestroyOnLoad(this);
+    }
+
     void Start()
     {
-        hp = 100;
-        ammoAmount = 5;
-        health.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = 100.ToString();
-        ammo.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = 5.ToString();
+        health.text = 100.ToString();
+        ammo.text = 5.ToString();
+        startMuteText.text = AudioManager.instance.mute ? "Un\nmute" : "Mute"; //The text on Start
     }
 
-    public void Shoot()
+    public void Updateammo(int amount)
     {
-        ammoAmount--;
-        ammo.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = ammoAmount.ToString();
+        ammo.text = amount.ToString(); //update current ammo count to HUD
     }
 
-    public void LoseHealth(int amount) //take damage for amount
+    public void Mute()
     {
-        hp -= amount;
-        if (hp > 0)
-        {
-            Updatehealth();
-        }
-        else
-        {
-            GameOver();
-        }
+        AudioManager.instance.Mute();
     }
 
-    public void GainHealth(int amount) //Heal player for amount
-    {
-        hp += amount;
-        if (hp > 100)
-        {
-            hp = 100;
-        }
-        Updatehealth();
-    }
 
-    private void Updatehealth()
+    public void Updatehealth(int amount)
     {
-        health.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = hp.ToString();
+        health.text = amount.ToString(); //update current health to HUD from Player
     }
 
     private void GameOver()
     {
-        health.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "0";
+        health.text = "Dead";
     }
+
+    public void Resume()
+    {
+        Time.timeScale = 1;
+        pauseMenu.SetActive(false);
+    }
+
+    public void Exit()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void Pause()
+    {
+        Time.timeScale = 0;
+        pauseMenu.SetActive(true);
+    }
+
+    //public void LoseHealth(int amount) //take damage for amount
+    //{
+    //    hp -= amount;
+    //    if (hp > 0)
+    //    {
+    //        Updatehealth();
+    //    }
+    //    else
+    //    {
+    //        hp = 0;
+    //        GameOver();
+    //    }
+    //}
+
+    //public void GainHealth(int amount) //Heal player for amount
+    //{
+    //    hp += amount;
+    //    if (hp > 100)
+    //    {
+    //        hp = 100;
+    //    }
+    //    Updatehealth();
+    //}
+
+
 }

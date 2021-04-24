@@ -8,6 +8,6 @@ namespace Assets.Scripts.ProceduralSystem
         public T min;
         public T max;
 
-        public abstract T getRandom();       
+        public abstract T GetRandom();       
     }
 }

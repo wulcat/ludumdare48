@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
   <Class Name="Assets.Scripts.ProceduralSystem.ProceduralSetting">
-    <Position X="6.75" Y="2" Width="3" />
+    <Position X="9.5" Y="10" Width="3" />
     <TypeIdentifier>
-      <HashCode>AAAAAgAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAQAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Assets\Scripts\ProceduralSystem\ProceduralSetting.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Assets.Scripts.ProceduralSystem.ProceduralSystem">
-    <Position X="7" Y="5.75" Width="2.5" />
+    <Position X="9.75" Y="6.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AEAAQAABAAAAAAEAAIAAAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
+      <HashCode>AEAEQAABACAAAAEAAIAAAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
       <FileName>Assets\Scripts\ProceduralSystem\ProceduralSystem.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -22,9 +22,9 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Assets.Scripts.ProceduralSystem.Dungeon">
-    <Position X="3" Y="4.75" Width="2.75" />
+    <Position X="5.75" Y="5" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAACAgIAAABAAAAAAAgAAAAAACAAAVAAAQgAAAoA=</HashCode>
+      <HashCode>BAACEAAAgIAAABAAAAAAAgABEIAAKAAAVAAgQkIAAoA=</HashCode>
       <FileName>Assets\Scripts\ProceduralSystem\Dungeon.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -33,25 +33,32 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Assets.Scripts.ProceduralSystem.DungeonConfig">
-    <Position X="6.5" Y="9" Width="3.5" />
+    <Position X="13.25" Y="9.25" Width="3.5" />
     <TypeIdentifier>
-      <HashCode>AAAEQAAAAAAAAAgAAAAAAAAAAAAAAAAAAAgAAIAAAAA=</HashCode>
+      <HashCode>AAAEQAAAAAAAAggABAAAAAAAAAAAAAAAIAgAAIAgAAA=</HashCode>
       <FileName>Assets\Scripts\ProceduralSystem\DungeonConfig.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Assets.Scripts.ProceduralSystem.Gateway">
-    <Position X="10.25" Y="5.75" Width="2" />
+    <Position X="13" Y="6.75" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAIAAACAAAAA=</HashCode>
       <FileName>Assets\Scripts\ProceduralSystem\Gateway.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="UnityEngine.MonoBehaviour" Collapsed="true">
-    <Position X="9" Y="4.25" Width="1.5" />
+    <Position X="11.75" Y="5.25" Width="1.5" />
     <TypeIdentifier />
   </Class>
+  <Class Name="Assets.Scripts.ProceduralSystem.FloorNode">
+    <Position X="2.25" Y="6.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\ProceduralSystem\FloorNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Interface Name="Assets.Scripts.ProceduralSystem.IDungeon">
-    <Position X="2.25" Y="2" Width="3" />
+    <Position X="5" Y="2" Width="3" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
       <FileName>Assets\Scripts\ProceduralSystem\IDungeon.cs</FileName>
