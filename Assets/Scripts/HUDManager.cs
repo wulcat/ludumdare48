@@ -13,6 +13,7 @@ public class HUDManager : MonoBehaviour
     public TMP_Text health;
     public TMP_Text ammo;
     public GameObject pauseMenu;
+    public TMP_Text startMuteText;
 
     private void Awake()
     {
@@ -31,11 +32,17 @@ public class HUDManager : MonoBehaviour
     {
         health.text = 100.ToString();
         ammo.text = 5.ToString();
+        startMuteText.text = AudioManager.instance.mute ? "Un\nmute" : "Mute"; //The text on Start
     }
 
     public void Updateammo(int amount)
     {
         ammo.text = amount.ToString(); //update current ammo count to HUD
+    }
+
+    public void Mute()
+    {
+        AudioManager.instance.Mute();
     }
 
 
