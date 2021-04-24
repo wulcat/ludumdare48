@@ -47,14 +47,14 @@ namespace Assets.Scripts.ProceduralSystem
 
         public void OnDrawGizmos()
         {
-            if (this.dungeon == null || this.dungeon.rooms == null)
+            if (this.dungeon == null || this.dungeon.floorNodes == null)
                 return;
 
             Gizmos.DrawWireSphere(transform.position, this.dungeon.config.dungeonRadius);
 
-            for (var i = 0; i < this.dungeon.rooms.Count; i++)
+            for (var i = 0; i < this.dungeon.floorNodes.Count; i++)
             {
-                var room = this.dungeon.rooms[i];
+                var room = this.dungeon.floorNodes[i];
                 var rect = room.rect;
 
                 if(room.isMain)

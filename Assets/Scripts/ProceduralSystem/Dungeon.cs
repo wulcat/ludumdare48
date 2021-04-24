@@ -9,7 +9,7 @@ using DelaunatorSharp.Unity.Extensions;
 
 namespace Assets.Scripts.ProceduralSystem
 {
-    [Serializable]
+    //[Serializable]
     public class Dungeon : IDungeon
     {
         public Gateway startGateway;
@@ -21,7 +21,7 @@ namespace Assets.Scripts.ProceduralSystem
 
         public int id { get ; set ; }
         public IDungeon parentDungeon { get ; set ; }
-        public List<RoomNode> rooms;
+        public List<FloorNode> floorNodes;
 
         public DungeonConfig config;
 
@@ -34,6 +34,7 @@ namespace Assets.Scripts.ProceduralSystem
 
         //
         public Delaunator delaunator;
+        public RoomNode roomGraph;
 
         public Dungeon(DungeonConfig config , float tileSize)
         {
@@ -54,7 +55,7 @@ namespace Assets.Scripts.ProceduralSystem
 
         private void GenerateRoom()
         {
-            this.rooms = new List<RoomNode>();
+            this.floorNodes = new List<FloorNode>();
 
             var roomCount = this.config.roomGenerateCountRange.GetRandom();
             var roomSize = this.config.roomGenerateSizeRange;
@@ -63,9 +64,9 @@ namespace Assets.Scripts.ProceduralSystem
             {
                 var position = GetRandomPointInCircle(this.config.dungeonRadius);
                 var rect = new Rect(position.x, position.y, roomSize.GetRandom(), roomSize.GetRandom());
-                var roomNode = new RoomNode(rect);
+                var roomNode = new FloorNode(rect);
 
-                this.rooms.Add(roomNode);
+                this.floorNodes.Add(roomNode);
             }
         }
 
@@ -74,9 +75,9 @@ namespace Assets.Scripts.ProceduralSystem
             var rigidbodies = new List<Rigidbody2D>();
             var shouldBreak = true;
 
-            for(var i = 0; i < this.rooms.Count ; i++)
+            for(var i = 0; i < this.floorNodes.Count ; i++)
             {
-                var room = this.rooms[i];
+                var room = this.floorNodes[i];
                 var clone = GameObject.Instantiate(simulationCube, new Vector3(room.rect.center.x, room.rect.center.y, 0), Quaternion.identity).GetComponent<Rigidbody2D>();
                 clone.transform.localScale = new Vector3(room.rect.width, room.rect.height, 1);
 
@@ -106,13 +107,13 @@ namespace Assets.Scripts.ProceduralSystem
             {
                 var body = rigidbodies[i];
                 var position = body.transform.position;
-                var room = this.rooms[i];
+                var room = this.floorNodes[i];
 
                 var x = position.x - room.rect.width / 2; 
                 var y = position.y - room.rect.height / 2;
 
                 //this.rooms[i] = new Rect(RoundM(x , this.mTileSize) , RoundM(y , this.mTileSize) , room.width, room.height);
-                this.rooms[i].rect = new Rect(x , y , room.rect.width, room.rect.height);
+                this.floorNodes[i].rect = new Rect(x , y , room.rect.width, room.rect.height);
 
                 this.mWidthMean += room.rect.width;
                 this.mHeightMean += room.rect.height;
@@ -125,14 +126,14 @@ namespace Assets.Scripts.ProceduralSystem
 
         private void DetermineMainRooms(float minThreshold = 1.25f)
         {
-            var roomCount = this.rooms.Count - 1;
+            var roomCount = this.floorNodes.Count - 1;
             var mainRoomMinWidth = (this.mWidthMean / roomCount) * minThreshold;
             var mainRoomMinHeight = (this.mHeightMean / roomCount) * minThreshold;
             var mainRoomCount = 0;
 
-            for (var i = 0; i < this.rooms.Count; i++)
+            for (var i = 0; i < this.floorNodes.Count; i++)
             {
-                var room = this.rooms[i];
+                var room = this.floorNodes[i];
                 if(room.rect.width > mainRoomMinWidth && room.rect.height > mainRoomMinHeight)
                 {
                     room.isMain = true;
@@ -148,7 +149,7 @@ namespace Assets.Scripts.ProceduralSystem
         private void TriangulateRoom()
         {
             List<IPoint> points = new List<IPoint>();
-            foreach(var room in this.rooms)
+            foreach(var room in this.floorNodes)
             {
                 if(room.isMain)
                     points.Add(new Point(room.rect.center.x, room.rect.center.y));
