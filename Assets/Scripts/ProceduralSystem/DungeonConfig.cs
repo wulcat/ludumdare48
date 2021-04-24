@@ -10,6 +10,7 @@ namespace Assets.Scripts.ProceduralSystem
         public float dungeonRadius = 5;
         public IntRangeValue roomGenerateCountRange = new IntRangeValue(20, 30);
         public FloatRangeValue roomGenerateSizeRange = new FloatRangeValue(0.5f, 1f);
+        //public FloatRangeValue mainRoomMinSize;
 
         public GameObject floorPrefab;
         public GameObject wallPrefab;

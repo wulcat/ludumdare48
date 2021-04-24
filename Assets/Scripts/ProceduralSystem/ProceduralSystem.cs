@@ -54,22 +54,32 @@ namespace Assets.Scripts.ProceduralSystem
             for (var i = 0; i < this.dungeon.rooms.Count; i++)
             {
                 var room = this.dungeon.rooms[i];
+                var rect = room.rect;
+
+                if(room.isMain)
+                {
+                    Gizmos.color = Color.red;
+                }
+                else
+                {
+                    Gizmos.color = Color.blue;
+                }
 
                 Gizmos.DrawLine( // bottom line
-                    new Vector3(room.xMin , 0 , room.yMin),
-                    new Vector3(room.xMax , 0 , room.yMin)
+                    new Vector3(rect.xMin , 0 , rect.yMin),
+                    new Vector3(rect.xMax , 0 , rect.yMin)
                 );
                 Gizmos.DrawLine( // left line
-                    new Vector3(room.xMin , 0 , room.yMin),
-                    new Vector3(room.xMin , 0 , room.yMax)
+                    new Vector3(rect.xMin , 0 , rect.yMin),
+                    new Vector3(rect.xMin , 0 , rect.yMax)
                 );
                 Gizmos.DrawLine( // right line
-                    new Vector3(room.xMax , 0 , room.yMin),
-                    new Vector3(room.xMax , 0 , room.yMax)
+                    new Vector3(rect.xMax , 0 , rect.yMin),
+                    new Vector3(rect.xMax , 0 , rect.yMax)
                 );
                 Gizmos.DrawLine( // top line
-                    new Vector3(room.xMin , 0 , room.yMax),
-                    new Vector3(room.xMax , 0 , room.yMax)
+                    new Vector3(rect.xMin , 0 , rect.yMax),
+                    new Vector3(rect.xMax , 0 , rect.yMax)
                 );
 
             }

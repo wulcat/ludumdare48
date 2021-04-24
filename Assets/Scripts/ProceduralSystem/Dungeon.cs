@@ -19,24 +19,24 @@ namespace Assets.Scripts.ProceduralSystem
 
         public int id { get ; set ; }
         public IDungeon parentDungeon { get ; set ; }
-        public List<Rect> rooms;
+        public List<RoomNode> rooms;
 
         public DungeonConfig config;
         private float mTileSize = 1;
+        private float mWidthMean = 0f;
+        private float mHeightMean = 0f;
 
         public Dungeon(DungeonConfig config , float tileSize)
         {
             this.config = config;
             this.mTileSize = tileSize;
-
-            
         }
 
         public IEnumerator Generate(GameObject simulationCube)
         {
             GenerateRoom();
             yield return SeparateRoom(simulationCube);
-            //DetermineMainRooms();
+            DetermineMainRooms();
             //TriangulateRoom();
             //GenerateGraph();
             //MinSpanningTree();
@@ -49,7 +49,7 @@ namespace Assets.Scripts.ProceduralSystem
 
         private void GenerateRoom()
         {
-            this.rooms = new List<Rect>();
+            this.rooms = new List<RoomNode>();
 
             var roomCount = this.config.roomGenerateCountRange.GetRandom();
             var roomSize = this.config.roomGenerateSizeRange;
@@ -58,8 +58,9 @@ namespace Assets.Scripts.ProceduralSystem
             {
                 var position = GetRandomPointInCircle(this.config.dungeonRadius);
                 var rect = new Rect(position.x, position.y, roomSize.GetRandom(), roomSize.GetRandom());
+                var roomNode = new RoomNode(rect);
 
-                this.rooms.Add(rect);
+                this.rooms.Add(roomNode);
             }
         }
 
@@ -71,8 +72,8 @@ namespace Assets.Scripts.ProceduralSystem
             for(var i = 0; i < this.rooms.Count ; i++)
             {
                 var room = this.rooms[i];
-                var clone = GameObject.Instantiate(simulationCube, new Vector3(room.center.x, room.center.y, 0), Quaternion.identity).GetComponent<Rigidbody2D>();
-                clone.transform.localScale = new Vector3(room.width, room.height, 1);
+                var clone = GameObject.Instantiate(simulationCube, new Vector3(room.rect.center.x, room.rect.center.y, 0), Quaternion.identity).GetComponent<Rigidbody2D>();
+                clone.transform.localScale = new Vector3(room.rect.width, room.rect.height, 1);
 
                 rigidbodies.Add(clone);
             }
@@ -102,11 +103,14 @@ namespace Assets.Scripts.ProceduralSystem
                 var position = body.transform.position;
                 var room = this.rooms[i];
 
-                var x = position.x - room.width / 2; 
-                var y = position.y - room.height / 2;
+                var x = position.x - room.rect.width / 2; 
+                var y = position.y - room.rect.height / 2;
 
                 //this.rooms[i] = new Rect(RoundM(x , this.mTileSize) , RoundM(y , this.mTileSize) , room.width, room.height);
-                this.rooms[i] = new Rect(x , y , room.width, room.height);
+                this.rooms[i].rect = new Rect(x , y , room.rect.width, room.rect.height);
+
+                this.mWidthMean += room.rect.width;
+                this.mHeightMean += room.rect.height;
 
                 GameObject.Destroy(body.gameObject);
             }
@@ -116,7 +120,18 @@ namespace Assets.Scripts.ProceduralSystem
 
         private void DetermineMainRooms()
         {
-            throw new System.NotImplementedException();
+            var roomCount = this.rooms.Count - 1;
+            var mainRoomMinWidth = (this.mWidthMean / roomCount) * 1.25f;
+            var mainRoomMinHeight = (this.mHeightMean / roomCount) * 1.25f;
+
+            for (var i = 0; i < this.rooms.Count; i++)
+            {
+                var room = this.rooms[i];
+                if(room.rect.width > mainRoomMinWidth && room.rect.height > mainRoomMinHeight)
+                {
+                    room.isMain = true;
+                }
+            }
         }
 
         private void TriangulateRoom()
