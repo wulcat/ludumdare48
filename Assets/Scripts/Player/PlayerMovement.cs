@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody rb;
 
     private Vector3 movement;
+    private Vector3 turn;
     // Start is called before the first frame update
     void Start()
     {
@@ -38,14 +39,19 @@ public class PlayerMovement : MonoBehaviour
 
     void MovePlayer()
     {
-        Vector3 velocity = new Vector3(0,0 , movement.y) * movementSpeed * Time.fixedDeltaTime;
+        Vector3 velocity = new Vector3(movement.x, 0 , movement.y) * movementSpeed * Time.fixedDeltaTime;
         velocity = transform.TransformDirection(velocity);
         rb.velocity = velocity;
     }
     
+    public void OnTurn(InputValue value)
+    {
+        turn = value.Get<Vector2>();
+    }
+
     void RotatePlayer()
     {
-        Vector3 turnEuler = new Vector3(0, movement.x, 0) * turnSpeed * Time.fixedDeltaTime;
+        Vector3 turnEuler = new Vector3(0, turn.x, 0) * turnSpeed * Time.fixedDeltaTime;
         rb.angularVelocity = turnEuler;
     }
 }
