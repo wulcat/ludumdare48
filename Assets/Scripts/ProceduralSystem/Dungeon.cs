@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Collections;
 
 // References: https://www.gamasutra.com/blogs/AAdonaac/20150903/252889/Procedural_Dungeon_Generation_Algorithm.php
 
@@ -28,8 +29,13 @@ namespace Assets.Scripts.ProceduralSystem
             this.config = config;
             this.mTileSize = tileSize;
 
+            
+        }
+
+        public IEnumerator Generate(GameObject simulationCube)
+        {
             GenerateRoom();
-            //SeparateRoom();
+            yield return SeparateRoom(simulationCube);
             //DetermineMainRooms();
             //TriangulateRoom();
             //GenerateGraph();
@@ -40,7 +46,8 @@ namespace Assets.Scripts.ProceduralSystem
             //MinSpanningTree();
             //DetermineHallway();
         }
-        public void GenerateRoom()
+
+        private void GenerateRoom()
         {
             this.rooms = new List<Rect>();
 
@@ -56,22 +63,68 @@ namespace Assets.Scripts.ProceduralSystem
             }
         }
 
-        public void SeparateRoom()
+        private IEnumerator SeparateRoom(GameObject simulationCube)
+        {
+            var rigidbodies = new List<Rigidbody2D>();
+            var shouldBreak = true;
+
+            for(var i = 0; i < this.rooms.Count ; i++)
+            {
+                var room = this.rooms[i];
+                var clone = GameObject.Instantiate(simulationCube, new Vector3(room.center.x, room.center.y, 0), Quaternion.identity).GetComponent<Rigidbody2D>();
+                clone.transform.localScale = new Vector3(room.width, room.height, 1);
+
+                rigidbodies.Add(clone);
+            }
+
+            while (shouldBreak)
+            {
+                shouldBreak = false;
+                yield return new WaitForSeconds(1f);
+
+
+                for (var i = 0; i < rigidbodies.Count; i++)
+                {
+                    var body = rigidbodies[i];
+                    if (!body.IsSleeping())
+                    {
+                        shouldBreak = true;
+                    }
+                    var position = body.transform.position;
+
+                    //body.transform.position = new Vector3(RoundM(position.x, this.mTileSize), RoundM(position.y, this.mTileSize), position.z);
+                }
+            }
+
+            for (var i = 0; i < rigidbodies.Count; i++)
+            {
+                var body = rigidbodies[i];
+                var position = body.transform.position;
+                var room = this.rooms[i];
+
+                var x = position.x - room.width / 2; 
+                var y = position.y - room.height / 2;
+
+                //this.rooms[i] = new Rect(RoundM(x , this.mTileSize) , RoundM(y , this.mTileSize) , room.width, room.height);
+                this.rooms[i] = new Rect(x , y , room.width, room.height);
+
+                GameObject.Destroy(body.gameObject);
+            }
+
+            Debug.Log("Everybody is sleeping now");
+        }
+
+        private void DetermineMainRooms()
         {
             throw new System.NotImplementedException();
         }
 
-        public void DetermineMainRooms()
+        private void TriangulateRoom()
         {
             throw new System.NotImplementedException();
         }
 
-        public void TriangulateRoom()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void GenerateGraph()
+        private void GenerateGraph()
         {
             throw new System.NotImplementedException();
         }
@@ -88,9 +141,9 @@ namespace Assets.Scripts.ProceduralSystem
 
 
         /// <summary>
-        /// TKdev's algorithm
+        /// Check out TKdev's algorithm
         /// </summary>
-        public Vector2 GetRandomPointInCircle(float radius)
+        private Vector2 GetRandomPointInCircle(float radius)
         {
             float t = 2 * Mathf.PI * UnityEngine.Random.Range(0, 1f);
             float u = UnityEngine.Random.Range(0, 1f) + UnityEngine.Random.Range(0, 1f);
@@ -113,7 +166,7 @@ namespace Assets.Scripts.ProceduralSystem
             );
         }
 
-        public float RoundM(float value , float pixelSize){
+        private float RoundM(float value , float pixelSize){
             return Mathf.Floor(((value + pixelSize - 1)/pixelSize))*pixelSize;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Assets.Scripts.ProceduralSystem
 {
@@ -9,5 +10,6 @@ namespace Assets.Scripts.ProceduralSystem
         /// Pixel size for snapping elements
         /// </summary>
         public float tileSize = 4f;
+        public GameObject simulationCubePrefab;
     }
 }

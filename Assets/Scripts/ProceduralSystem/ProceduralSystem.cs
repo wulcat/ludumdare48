@@ -20,7 +20,11 @@ namespace Assets.Scripts.ProceduralSystem
         /// </summary>
         public void CreateDungeon(DungeonConfig config)
         {
-            this.dungeon = new Dungeon(config , this.setting.tileSize);
+            var dungeon = new Dungeon(config , this.setting.tileSize);
+
+            StartCoroutine(dungeon.Generate(this.setting.simulationCubePrefab));
+
+            this.dungeon = dungeon;
         }
 
         /// <summary>
