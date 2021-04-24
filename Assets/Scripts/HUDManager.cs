@@ -12,8 +12,6 @@ public class HUDManager : MonoBehaviour
 
     public TMP_Text health;
     public TMP_Text ammo;
-    int hp;
-    int ammoAmount;
     public GameObject pauseMenu;
 
     private void Awake()
@@ -33,10 +31,6 @@ public class HUDManager : MonoBehaviour
     {
         health.text = 100.ToString();
         ammo.text = 5.ToString();
-#if UNITY_EDITOR
-        hp = 100;
-        ammoAmount = 10;
-#endif
     }
 
     public void Updateammo(int amount)
@@ -45,7 +39,7 @@ public class HUDManager : MonoBehaviour
     }
 
 
-    private void Updatehealth(int amount)
+    public void Updatehealth(int amount)
     {
         health.text = amount.ToString(); //update current health to HUD from Player
     }
