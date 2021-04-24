@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class HUDManager : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class HUDManager : MonoBehaviour
     public GameObject ammo;
     int hp;
     int ammoAmount;
+    public GameObject pauseMenu;
 
     // Start is called before the first frame update
     void Start()
@@ -66,4 +68,22 @@ public class HUDManager : MonoBehaviour
     {
         health.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Dead";
     }
+
+    public void Resume()
+    {
+        Time.timeScale = 1;
+        pauseMenu.SetActive(false);
+    }
+
+    public void Exit()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void Pause()
+    {
+        Time.timeScale = 0;
+        pauseMenu.SetActive(true);
+    }
+
 }
