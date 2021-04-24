@@ -1,8 +1,8 @@
 ﻿using System;
-using UnityEngine;
 
 namespace Assets.Scripts.ProceduralSystem
 {
+    [Serializable]
     public abstract class RangeValue<T>
     { 
         public T min;

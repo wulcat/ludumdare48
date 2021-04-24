@@ -3,8 +3,8 @@
   <Class Name="Assets.Scripts.ProceduralSystem.ProceduralSetting">
     <Position X="6.75" Y="2" Width="3" />
     <TypeIdentifier>
-      <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
-      <FileName>Assets\Scripts\Utils\ProceduralSetting.cs</FileName>
+      <HashCode>AAAAAgAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\ProceduralSystem\ProceduralSetting.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Assets.Scripts.ProceduralSystem.ProceduralSystem">
@@ -35,7 +35,7 @@
   <Class Name="Assets.Scripts.ProceduralSystem.DungeonConfig">
     <Position X="6.5" Y="9" Width="3.5" />
     <TypeIdentifier>
-      <HashCode>AAAEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <HashCode>AAAEQAAAAAAAAAgAAAAAAAAAAAAAAAAAAAgAAIAAAAA=</HashCode>
       <FileName>Assets\Scripts\ProceduralSystem\DungeonConfig.cs</FileName>
     </TypeIdentifier>
   </Class>

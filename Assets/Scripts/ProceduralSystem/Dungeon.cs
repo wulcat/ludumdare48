@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
 
 // References: https://www.gamasutra.com/blogs/AAdonaac/20150903/252889/Procedural_Dungeon_Generation_Algorithm.php
@@ -12,10 +13,10 @@ namespace Assets.Scripts.ProceduralSystem
         /// <summary>
         /// for entry to multiple dungeons
         /// </summary>
-        public System.Collections.Generic.List<Gateway> subDungeons;
+        public List<Gateway> subDungeons;
 
-        public int id { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-        public IDungeon parentDungeon { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        public int id { get ; set ; }
+        public IDungeon parentDungeon { get ; set ; }
 
         public void GenerateDungeon()
         {
