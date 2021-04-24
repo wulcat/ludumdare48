@@ -5,27 +5,23 @@ using UnityEngine;
 public class PlayerShoot : MonoBehaviour
 {
     [SerializeField]
-    private Shotgun startingWeapon;
+    private GameObject startingWeapon;
 
     private IGun currentWeapon;
     // Start is called before the first frame update
     private void Awake()
     {
-        currentWeapon = startingWeapon;
-    }
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        GameObject go = Instantiate(startingWeapon, transform);
+        currentWeapon = go.GetComponent<IGun>();
     }
 
     public void OnShoot()
     {
         currentWeapon.Shoot();
+    }
+
+    public void OnUnShoot()
+    {
+        currentWeapon.UnShoot();
     }
 }

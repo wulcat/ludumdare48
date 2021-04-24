@@ -62,12 +62,10 @@ public class Shotgun : MonoBehaviour, IGun
             if (Physics.Raycast(muzzleTransform.position, muzzleTransform.forward, out hit, Mathf.Infinity))
             {
                 Debug.DrawRay(muzzleTransform.position, muzzleTransform.forward * hit.distance, Color.red, 2f);
-                Debug.Log("Did Hit");
             }
             else
             {
                 Debug.DrawRay(muzzleTransform.position, muzzleTransform.forward * 1000, Color.white, 2f);
-                Debug.Log("Did not Hit");
             }
             muzzleTransform.localEulerAngles = Vector3.zero;
         }
@@ -98,5 +96,10 @@ public class Shotgun : MonoBehaviour, IGun
         muzzle.SetActive(true);
         yield return new WaitForSeconds(.2f);
         muzzle.SetActive(false);
+    }
+
+    public void UnShoot()
+    {
+        
     }
 }

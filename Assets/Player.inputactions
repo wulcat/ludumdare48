@@ -11,13 +11,21 @@
                     "id": "e9b0187e-b5d2-4ad7-9d90-04f3b30e30de",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "Press"
                 },
                 {
                     "name": "Move",
                     "type": "Value",
                     "id": "92288ac4-8b32-4c0a-9fa5-78e723b0fb63",
                     "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "UnShoot",
+                    "type": "Button",
+                    "id": "7ba786f7-a359-4456-98bb-61e01a090794",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
                 }
@@ -88,6 +96,17 @@
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "a29a32fb-d00f-4f8a-a82f-1cd4bcd859ee",
+                    "path": "<Keyboard>/space",
+                    "interactions": "Press(behavior=1)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UnShoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

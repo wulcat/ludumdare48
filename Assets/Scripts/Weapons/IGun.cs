@@ -12,5 +12,6 @@ public interface IGun
     public AudioSource AudioSource { get; set; }
     public Transform MuzzleTransform { get; set; }
     public void Shoot();
+    public void UnShoot();
     public void Reload();
 }
