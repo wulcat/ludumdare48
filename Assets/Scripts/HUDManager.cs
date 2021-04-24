@@ -23,9 +23,15 @@ public class HUDManager : MonoBehaviour
 
     public void Shoot()
     {
-        ammoAmount--;
+        if (ammoAmount > 0)
+        {
+            ammoAmount--;
+        }
         ammo.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = ammoAmount.ToString();
     }
+
+    
+
 
     public void LoseHealth(int amount) //take damage for amount
     {
@@ -36,6 +42,7 @@ public class HUDManager : MonoBehaviour
         }
         else
         {
+            hp = 0;
             GameOver();
         }
     }
@@ -57,6 +64,6 @@ public class HUDManager : MonoBehaviour
 
     private void GameOver()
     {
-        health.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "0";
+        health.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Dead";
     }
 }
