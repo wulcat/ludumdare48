@@ -18,3 +18,6 @@
 
 #### Global Settings
     - Overall main generation values (like random seed, min-max dungeon sizes)
+
+#### Class Diagram
+![System](ProceduralSystemClassDiagram.png?raw=true "Title")
