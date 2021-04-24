@@ -6,9 +6,8 @@ namespace Assets.Scripts.ProceduralSystem
     public class ProceduralSetting
     {
         /// <summary>
-        /// Use this to adjust the whole generation scale in unity (by default 1)
+        /// Pixel size for snapping elements
         /// </summary>
-        public float scaleSize = 1f;
-        public IntRangeValue minMaxRoomRange;
+        public float tileSize = 4f;
     }
 }

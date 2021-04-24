@@ -10,12 +10,17 @@ namespace Assets.Scripts.ProceduralSystem
         public Dungeon dungeon;
         public List<DungeonConfig> dungeonConfigs;
 
+        public void Start()
+        {
+            CreateDungeon(this.dungeonConfigs[0]);
+        }
+
         /// <summary>
         /// Genearte the dungeon
         /// </summary>
-        public Dungeon CreateDungeon(DungeonConfig config)
+        public void CreateDungeon(DungeonConfig config)
         {
-            throw new System.NotImplementedException();
+            this.dungeon = new Dungeon(config , this.setting.tileSize);
         }
 
         /// <summary>
@@ -32,6 +37,38 @@ namespace Assets.Scripts.ProceduralSystem
         public void CacheDungeon()
         {
             throw new System.NotImplementedException();
+        }
+
+
+        public void OnDrawGizmos()
+        {
+            if (this.dungeon == null || this.dungeon.rooms == null)
+                return;
+
+            Gizmos.DrawWireSphere(transform.position, this.dungeon.config.dungeonRadius);
+
+            for (var i = 0; i < this.dungeon.rooms.Count; i++)
+            {
+                var room = this.dungeon.rooms[i];
+
+                Gizmos.DrawLine( // bottom line
+                    new Vector3(room.xMin , 0 , room.yMin),
+                    new Vector3(room.xMax , 0 , room.yMin)
+                );
+                Gizmos.DrawLine( // left line
+                    new Vector3(room.xMin , 0 , room.yMin),
+                    new Vector3(room.xMin , 0 , room.yMax)
+                );
+                Gizmos.DrawLine( // right line
+                    new Vector3(room.xMax , 0 , room.yMin),
+                    new Vector3(room.xMax , 0 , room.yMax)
+                );
+                Gizmos.DrawLine( // top line
+                    new Vector3(room.xMin , 0 , room.yMax),
+                    new Vector3(room.xMax , 0 , room.yMax)
+                );
+
+            }
         }
     }
 }
