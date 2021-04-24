@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fireRate: 10
   isAutomatic: 1
-  damage: 0
+  damage: 1
   muzzle: {fileID: 7728920711899140330}
   audioSource: {fileID: 542381212373368388}
   muzzleTransform: {fileID: 542381213144173413}

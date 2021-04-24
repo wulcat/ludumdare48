@@ -58,6 +58,10 @@ public class ChainGun : MonoBehaviour, IGun
                 if (Physics.Raycast(muzzleTransform.position, muzzleTransform.forward, out hit, Mathf.Infinity))
                 {
                     Debug.DrawRay(muzzleTransform.position, muzzleTransform.forward * hit.distance, Color.red, 2f);
+                    if (hit.transform.CompareTag("Enemy"))
+                    {
+                        hit.transform.GetComponent<Enemy>().TakeDamage(damage);
+                    }
                 }
                 else
                 {
