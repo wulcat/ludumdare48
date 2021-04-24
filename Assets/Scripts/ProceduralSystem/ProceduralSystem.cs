@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DelaunatorSharp.Unity.Extensions;
 
 namespace Assets.Scripts.ProceduralSystem
 {
@@ -83,6 +84,30 @@ namespace Assets.Scripts.ProceduralSystem
                 );
 
             }
+
+            if (this.dungeon.delaunator == null)
+                return;
+
+            Gizmos.color = Color.green;
+
+            this.dungeon.delaunator.ForEachTriangleEdge(edge =>
+            {
+                var pointA = edge.P.ToVector3();
+                var pointB = edge.Q.ToVector3();
+
+                Gizmos.DrawLine(new Vector3(pointA.x, 0 , pointA.y) , new Vector3(pointB.x, 0 , pointB.y));
+                
+                //if (drawTriangleEdges)
+                //{
+                //    CreateLine(TrianglesContainer, $"TriangleEdge - {edge.Index}", new Vector3[] { edge.P.ToVector3(), edge.Q.ToVector3() }, triangleEdgeColor, triangleEdgeWidth, 0);
+                //}
+
+                //if (drawTrianglePoints)
+                //{
+                //    var pointGameObject = Instantiate(trianglePointPrefab, PointsContainer);
+                //    pointGameObject.transform.SetPositionAndRotation(edge.P.ToVector3(), Quaternion.identity);
+                //}
+            });
         }
     }
 }

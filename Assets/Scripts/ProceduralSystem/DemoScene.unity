@@ -272,15 +272,13 @@ MonoBehaviour:
     subDungeons: []
     rooms: []
     config:
-      dungeonRadius: 5
+      dungeonRadius: 3
+      minMainRoomCount: 5
       roomGenerateCountRange:
         min: 20
         max: 30
       roomGenerateSizeRange:
         min: 0.5
-        max: 1
-      mainRoomMinSize:
-        min: 0.9
         max: 1
       floorPrefab: {fileID: 0}
       wallPrefab: {fileID: 0}
@@ -291,15 +289,13 @@ MonoBehaviour:
       bossPrefabs: []
   dungeonConfigs:
   - dungeonRadius: 40
+    minMainRoomCount: 5
     roomGenerateCountRange:
       min: 50
       max: 80
     roomGenerateSizeRange:
       min: 2
       max: 18
-    mainRoomMinSize:
-      min: 12
-      max: 12
     floorPrefab: {fileID: 0}
     wallPrefab: {fileID: 0}
     enemyCountRange:

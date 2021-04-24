@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using DelaunatorSharp;
+using DelaunatorSharp.Unity.Extensions;
 
 // References: https://www.gamasutra.com/blogs/AAdonaac/20150903/252889/Procedural_Dungeon_Generation_Algorithm.php
 
@@ -22,9 +24,16 @@ namespace Assets.Scripts.ProceduralSystem
         public List<RoomNode> rooms;
 
         public DungeonConfig config;
+
+        // snapping to pixels
         private float mTileSize = 1;
+
+        // main room selection
         private float mWidthMean = 0f;
         private float mHeightMean = 0f;
+
+        //
+        public Delaunator delaunator;
 
         public Dungeon(DungeonConfig config , float tileSize)
         {
@@ -37,11 +46,7 @@ namespace Assets.Scripts.ProceduralSystem
             GenerateRoom();
             yield return SeparateRoom(simulationCube);
             DetermineMainRooms();
-            //TriangulateRoom();
-            //GenerateGraph();
-            //MinSpanningTree();
-            //DetermineHallway();
-            //TriangulateRoom();
+            TriangulateRoom();
             //GenerateGraph();
             //MinSpanningTree();
             //DetermineHallway();
@@ -118,11 +123,12 @@ namespace Assets.Scripts.ProceduralSystem
             Debug.Log("Everybody is sleeping now");
         }
 
-        private void DetermineMainRooms()
+        private void DetermineMainRooms(float minThreshold = 1.25f)
         {
             var roomCount = this.rooms.Count - 1;
-            var mainRoomMinWidth = (this.mWidthMean / roomCount) * 1.25f;
-            var mainRoomMinHeight = (this.mHeightMean / roomCount) * 1.25f;
+            var mainRoomMinWidth = (this.mWidthMean / roomCount) * minThreshold;
+            var mainRoomMinHeight = (this.mHeightMean / roomCount) * minThreshold;
+            var mainRoomCount = 0;
 
             for (var i = 0; i < this.rooms.Count; i++)
             {
@@ -130,13 +136,25 @@ namespace Assets.Scripts.ProceduralSystem
                 if(room.rect.width > mainRoomMinWidth && room.rect.height > mainRoomMinHeight)
                 {
                     room.isMain = true;
+                    mainRoomCount++;
                 }
             }
+
+            // Make sure have min 3 main rooms for triangulation
+            if (mainRoomCount < this.config.minMainRoomCount)
+                DetermineMainRooms(minThreshold - 0.05f);
         }
 
         private void TriangulateRoom()
         {
-            throw new System.NotImplementedException();
+            List<IPoint> points = new List<IPoint>();
+            foreach(var room in this.rooms)
+            {
+                if(room.isMain)
+                    points.Add(new Point(room.rect.center.x, room.rect.center.y));
+            }
+
+            this.delaunator = new Delaunator(points.ToArray());
         }
 
         private void GenerateGraph()
