@@ -24,9 +24,8 @@ public class MainMenuBehavior : MonoBehaviour
     {
         AudioListener.pause = !AudioListener.pause;
         if (AudioListener.pause == true)
-        {
             GameObject.Find("MuteButton").GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Un\nmute";
-        }
-        else GameObject.Find("MuteButton").GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Mute";
+        else
+            GameObject.Find("MuteButton").GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Mute";
     }
 }
