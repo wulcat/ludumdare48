@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         currentHealth = maxHealth;
+        HUDManager.instance.Updatehealth((int)currentHealth);
     }
     
     private void Update()
@@ -34,6 +35,10 @@ public class Player : MonoBehaviour
 
     public void TakeDamage(float value)
     {
+        if(invulnerable)
+        {
+            return;
+        }
         invulnerable = true;
         canTakeHit = Time.time + getHitAgainTime;
         if(currentHealth - value > 0)
@@ -41,6 +46,8 @@ public class Player : MonoBehaviour
             currentHealth -= value;
             audioSource.clip = gruntSounds[Random.Range(0, gruntSounds.Count - 1)];
             audioSource.Play();
+            HUDManager.instance.Updatehealth((int)currentHealth);
+            print(currentHealth.ToString());
         }
         else
         {
@@ -58,10 +65,19 @@ public class Player : MonoBehaviour
     {
         if(other.CompareTag("Enemy"))
         {
-            if (!invulnerable)
-            {
-                TakeDamage(other.GetComponent<Enemy>().touchDamage); 
-            }
+            TakeDamage(other.GetComponent<Enemy>().touchDamage); 
+        }
+    }
+
+    public void OnPause()
+    {
+        if(Time.timeScale > 0)
+        {
+            HUDManager.instance.Pause();
+        }
+        else
+        {
+            HUDManager.instance.Resume();
         }
     }
 }

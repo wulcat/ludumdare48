@@ -25,7 +25,7 @@ public class Enemy : MonoBehaviour
         currentHp = maxHp;
         objectPooler = ObjectPooler.instance;
         pool = objectPooler.pools[1];
-        if (enemyShoot)
+        if (enemyShoot && !enemyMovement)
         {
             enemyShoot.damage = gunDamage;
         }
