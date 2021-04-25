@@ -12,7 +12,7 @@ namespace Assets.Scripts.ProceduralSystem
 {
     using Paths = List<List<IntPoint>>;
 
-    [Serializable]
+    //[Serializable]
     public class Dungeon : IDungeon
     {
         public bool isReady = false;
@@ -503,7 +503,9 @@ namespace Assets.Scripts.ProceduralSystem
         }
 
         private void SpawnPlayer() {
-            GameManager.instance.player.transform.position = new Vector3(this.entryPoint.x , 1 , this.entryPoint.z);
+            var player = GameManager.instance.player.transform;
+            player.position = new Vector3(this.entryPoint.x , 1 , this.entryPoint.z);
+            player.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
         }
 
         private void SpawnEnemies()
