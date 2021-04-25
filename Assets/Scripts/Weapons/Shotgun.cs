@@ -28,6 +28,7 @@ public class Shotgun : MonoBehaviour, IGun
 
     private float canShoot = 0;
     public LayerMask layerMask;
+    ObjectPooler objectPooler;
 
     public void Reload()
     {
@@ -69,8 +70,11 @@ public class Shotgun : MonoBehaviour, IGun
                 }
                 else
                 {
-                    ObjectPooler.instance.SpawnFromPool("WallParticles", hit.point, hit.transform.rotation, ObjectPooler.instance.pools[2]);
+                    objectPooler.SpawnFromPool("WallParticles", hit.point, hit.transform.rotation, objectPooler.pools[2]);
                 }
+                GameObject obj = objectPooler.SpawnFromPool("BulletTrail", muzzleTransform.position, Quaternion.identity, objectPooler.pools[3]);
+                BulletTrail bulletTrail = obj.GetComponent<BulletTrail>();
+                bulletTrail.Initialize(muzzleTransform.position, hit.point);
             }
             else
             {
@@ -84,6 +88,7 @@ public class Shotgun : MonoBehaviour, IGun
     void Start()
     {
         muzzle.SetActive(false);
+        objectPooler = ObjectPooler.instance;
     }
 
     // Update is called once per frame

@@ -674,6 +674,9 @@ MonoBehaviour:
   - tag: WallParticles
     prefab: {fileID: 7930424559048993758, guid: 14d30777c6f19ea44afa186693517a22, type: 3}
     size: 10
+  - tag: BulletTrail
+    prefab: {fileID: 8951673136764111898, guid: 0318bd21572a2b144b864b60922a4f57, type: 3}
+    size: 10
 --- !u!4 &583939248
 Transform:
   m_ObjectHideFlags: 0
@@ -826,6 +829,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5715997916789937352, guid: b5ffceec466d4194ba4e851ef27c672c, type: 3}
+      propertyPath: startingWeapon
+      value: 
+      objectReference: {fileID: 542381212373368390, guid: 42e123c37ce0fd246a106061b40cdbe8, type: 3}
     - target: {fileID: 5715997916789937354, guid: b5ffceec466d4194ba4e851ef27c672c, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -979,7 +986,7 @@ GameObject:
   - component: {fileID: 1531709357}
   m_Layer: 0
   m_Name: Witch
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

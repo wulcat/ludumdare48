@@ -30,6 +30,7 @@ public class ChainGun : MonoBehaviour, IGun
     public LayerMask layerMask;
     private float canShoot = 0;
     private float currentBarrelSpeed = 0;
+    ObjectPooler objectPooler;
 
     public void Reload()
     {
@@ -64,8 +65,11 @@ public class ChainGun : MonoBehaviour, IGun
                     }
                     else
                     {
-                        ObjectPooler.instance.SpawnFromPool("WallParticles", hit.point, hit.transform.rotation, ObjectPooler.instance.pools[2]);
+                        objectPooler.SpawnFromPool("WallParticles", hit.point, hit.transform.rotation, objectPooler.pools[2]);
                     }
+                    GameObject obj = objectPooler.SpawnFromPool("BulletTrail", muzzleTransform.position, Quaternion.identity, objectPooler.pools[3]);
+                    BulletTrail bulletTrail = obj.GetComponent<BulletTrail>();
+                    bulletTrail.Initialize(muzzleTransform.position, hit.point);
                 }
                 else
                 {
@@ -74,6 +78,10 @@ public class ChainGun : MonoBehaviour, IGun
             }
         }
         model.transform.Rotate(new Vector3(0, 0, currentBarrelSpeed * Time.deltaTime));
+    }
+    private void Start()
+    {
+        objectPooler = ObjectPooler.instance;
     }
 
     // Update is called once per frame
