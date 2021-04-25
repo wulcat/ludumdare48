@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class EnemyData : MonoBehaviour
 {
+    public float aboveGround;
+
+    private void Awake()
+    {
+        aboveGround = GetComponent<BoxCollider>().size.y / 2;
+    }
     // Start is called before the first frame update
     void Start()
     {
