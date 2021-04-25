@@ -15,6 +15,7 @@ namespace Assets.Scripts.ProceduralSystem
     [Serializable]
     public class Dungeon : IDungeon
     {
+        public bool isReady = false;
         public Gateway startGateway;
         public Gateway exitGateway;
         /// <summary>
@@ -27,6 +28,10 @@ namespace Assets.Scripts.ProceduralSystem
         public List<FloorNode> floorNodes;
 
         public DungeonConfig config;
+
+        [HideInInspector] public Vector3 entryPoint;
+        [HideInInspector] public Vector3 exitPoint;
+        [HideInInspector] public List<Vector3> spawnPoints;
 
         // snapping to pixels
         private float mTileSize = 1;
@@ -45,8 +50,6 @@ namespace Assets.Scripts.ProceduralSystem
         public Paths clipperOutput;
 
         private List<Transform> wallClones;
-        private Vector3 entryPoint;
-        private Vector3 exitPoint;
 
         public Dungeon(DungeonConfig config , float tileSize) {
             this.config = config;
@@ -65,8 +68,14 @@ namespace Assets.Scripts.ProceduralSystem
             ExtendRectSize(1.2f);
             ClipPaths();
             InstantiateWalls();
-            CreateEntryPoint();
-            CreateExitPoint();
+            FindEntryPoint();
+            FindExitPoint();
+            FindSpawnPoint();
+
+            SpawnPlayer();
+            SpawnEnemies();
+
+            this.isReady = true;
         }
 
 
@@ -415,7 +424,7 @@ namespace Assets.Scripts.ProceduralSystem
             }
         }
 
-        private void CreateEntryPoint()
+        private void FindEntryPoint()
         {
             var leastPositionedWalls = new List<Transform>();
             var leastEntryXValue = 9999f;
@@ -445,7 +454,7 @@ namespace Assets.Scripts.ProceduralSystem
             this.entryPoint = leastPositionedWalls[centerXIndex].position;
         }
 
-        private void CreateExitPoint()
+        private void FindExitPoint()
         {
             var maxPositionedWalls = new List<Transform>();
             var maxEntryXValue = -9999f;
@@ -473,6 +482,36 @@ namespace Assets.Scripts.ProceduralSystem
             maxPositionedWalls[centerXIndex].gameObject.SetActive(false);
 
             this.exitPoint = maxPositionedWalls[centerXIndex].position;
+        }
+
+        private void FindSpawnPoint()
+        {
+            this.spawnPoints = new List<Vector3>();
+
+            var entryPoint = new Rect(this.entryPoint.x, this.entryPoint.z, 5, 5);
+            var exitRect = new Rect(this.exitPoint.x, this.exitPoint.z, 5, 5);            
+
+            foreach (var floor in this.floorNodes)
+            {
+                if (floor.isMain) {
+                    if(!floor.rect.Overlaps(entryPoint) && !floor.rect.Overlaps(exitRect))
+                    {
+                        spawnPoints.Add(new Vector3(floor.rect.center.x, 0, floor.rect.center.y));
+                    }
+                }
+            }
+        }
+
+        private void SpawnPlayer() { }
+
+        private void SpawnEnemies()
+        {
+            for(var i = 0; i < this.spawnPoints.Count; i++)
+            {
+                var enemyPrefab = this.config.enemyPrefabs[UnityEngine.Random.Range(0 , this.config.enemyPrefabs.Count - 1)];
+                var clone = GameObject.Instantiate(enemyPrefab);
+                clone.transform.position = this.spawnPoints[i];
+            }
         }
 
         // ---------------------- extra functions
