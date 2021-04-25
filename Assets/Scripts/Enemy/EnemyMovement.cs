@@ -24,6 +24,8 @@ public class EnemyMovement : MonoBehaviour
     public float targetDistanceMax;
     public LayerMask layerMask;
     public Animator animator;
+    [HideInInspector]
+    public bool collided = false;
 
     Vector3 target;
     float canNewTarget;
@@ -95,6 +97,11 @@ public class EnemyMovement : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, targetVector, step);
             if(!enabled)
             {
+                break;
+            }
+            if(collided)
+            {
+                collided = false;
                 break;
             }
             yield return new WaitForSeconds(.002f);

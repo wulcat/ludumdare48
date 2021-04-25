@@ -7,6 +7,7 @@ TagManager:
   - Enemy
   - Wall
   - Bullet
+  - EnemyBody
   layers:
   - Default
   - TransparentFX
@@ -16,7 +17,7 @@ TagManager:
   - UI
   - Wall
   - Bullet
-  - 
+  - EnemyBody
   - 
   - 
   - 
