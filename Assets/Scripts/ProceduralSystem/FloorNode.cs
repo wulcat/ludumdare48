@@ -9,11 +9,13 @@ namespace Assets.Scripts.ProceduralSystem
     [Serializable]
     public class FloorNode
     {
+        public int id;
         public Rect rect;
         public bool isMain = false;
 
-        public FloorNode(Rect rect)
+        public FloorNode(int id , Rect rect)
         {
+            this.id = id;
             this.rect = rect;
         }
 
