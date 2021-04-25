@@ -16,12 +16,16 @@ public class EnemyShoot : MonoBehaviour
     public float fireRate = 1;
     public float bulletSpeed = 3;
     public float turnSpeed = 1;
-    public GameObject player;
 
     float _canShoot;
+
+    GameObject player;
+    ObjectPooler objectPooler;
     void Start()
     {
         _canShoot = 1 / fireRate;
+        player = GameManager.instance.player;
+        objectPooler = ObjectPooler.instance;
     }
 
     // Update is called once per frame
@@ -38,7 +42,7 @@ public class EnemyShoot : MonoBehaviour
     void Shoot()
     {
         bulletSpawn.LookAt(player.transform);
-        GameObject bullet = Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
+        GameObject bullet = objectPooler.SpawnFromPool("Bullet", bulletSpawn.transform.position, bulletSpawn.transform.rotation);
         bullet.GetComponent<Bullet>().speed = bulletSpeed;
         //audioSource.Play();
     }
