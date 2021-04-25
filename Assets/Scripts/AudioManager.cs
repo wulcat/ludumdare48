@@ -9,7 +9,6 @@ public class AudioManager : MonoBehaviour
     public static AudioManager instance = null;
 
     public bool mute = false;
-    private TMP_Text muteText;
 
     private void Awake()
     {
@@ -26,8 +25,7 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        muteText = GameObject.Find("MuteText").GetComponent<TMP_Text>();
-        muteText.text = mute ? "Un\nmute" : "Mute";
+
     }
 
     public void Mute()
@@ -37,7 +35,5 @@ public class AudioManager : MonoBehaviour
             AudioListener.volume = 0;
         else
             AudioListener.volume = 1;
-        muteText = GameObject.Find("MuteText").GetComponent<TMP_Text>(); //it changes throuhout the game
-        muteText.text = mute ? "Un\nmute" : "Mute";
     }
 }
