@@ -8,6 +8,7 @@ public class Enemy : MonoBehaviour
     private float currentHp;
     public GameObject witchObject;
     public float gunDamage = 10;
+    public float touchDamage = 10;
     ObjectPooler.Pool pool;
     ObjectPooler objectPooler;
     public AudioSource audioSource;
@@ -17,6 +18,7 @@ public class Enemy : MonoBehaviour
     public bool isAlive = true;
     public EnemyShoot enemyShoot;
     public EnemyMovement enemyMovement;
+    public GameObject deathExplosion;
     // Start is called before the first frame update
     void Start()
     {
@@ -54,6 +56,7 @@ public class Enemy : MonoBehaviour
         audioSource.clip = deathClip;
         audioSource.Play();
         GetComponent<Collider>().enabled = false;
+        Instantiate(deathExplosion, transform.position, Quaternion.identity);
         if (enemyMovement)
         {
             if (enemyMovement.enabled)
@@ -88,6 +91,6 @@ public class Enemy : MonoBehaviour
     public void SetInAirToFalse()
     {
         enemyShoot.inAir = false;
-        witchObject.transform.position = new Vector3(transform.position.x, -0.34f, transform.position.z);
+        witchObject.transform.position = new Vector3(transform.position.x, -0.8f, transform.position.z);
     }
 }
