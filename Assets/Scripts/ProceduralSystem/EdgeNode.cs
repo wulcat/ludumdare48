@@ -80,5 +80,94 @@ namespace Assets.Scripts.ProceduralSystem
             }
 
         }
+
+        public Vector2 FindRectanularIntersection()
+        {
+            var posA = this.a.rect.center;
+            var posB = this.b.rect.center;
+  
+            return new Vector2(posA.x, posB.y);
+        }
+
+
+        public static Rect RectBetweemTwoRects(Rect a, Rect b, float defaultSize)
+        {
+            var x = 0f;
+            var y = 0f;
+
+            var aCenter = a.center;
+            var bCenter = b.center;
+
+            var distanceX = Mathf.Abs(Mathf.Abs(a.center.x) - Mathf.Abs(b.center.x));
+            var distanceY = Mathf.Abs(Mathf.Abs(a.center.y) - Mathf.Abs(b.center.y));
+
+            //var width = distanceX - ((a.width + b.width) / 2);
+            //var height = distanceY - ((a.height + b.height) / 2);
+
+            var width = defaultSize;
+            var height = defaultSize;
+
+            if (aCenter.x < bCenter.x)
+            {
+                var minX = a.xMax;
+                var maxX = b.xMin;
+
+                if (distanceY < 0.03f)
+                {
+                    width = maxX - minX;
+                }
+                
+                x = minX + (maxX - minX) / 2;
+            }
+            else
+            {
+                var minX = b.xMax;
+                var maxX = a.xMin;
+
+                if (distanceY < 0.03f)
+                {
+                    width = maxX - minX;
+                }
+
+                x = minX + (maxX - minX) / 2;
+            }
+
+
+            if (aCenter.y < bCenter.y)
+            {
+                var minY = a.yMax;
+                var maxY = b.yMin;
+
+                if (distanceX < 0.03f)
+                {
+                    height = maxY - minY;
+                }
+
+                y = minY + (maxY - minY) / 2;
+            }
+            else
+            {
+                var minY = b.yMax;
+                var maxY = a.yMin;
+
+                if (distanceX < 0.03f)
+                {
+                    height = maxY - minY;
+                }
+
+                y = minY + (maxY - minY) / 2;
+            }
+
+            if(distanceX < 0.03f)
+            {
+                x = a.center.x;
+            }
+            if(distanceY < 0.03f)
+            {
+                y = a.center.y;
+            }
+
+            return new Rect(x - width / 2, y - height / 2 , width, height);
+        }
     }
 }

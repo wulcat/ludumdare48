@@ -51,7 +51,7 @@ namespace Assets.Scripts.ProceduralSystem
             TriangulateRoom();
             GenerateGraph();
             MinimumSpanningTree(this.roomGraph);
-            //DetermineHallway();
+            DetermineHallway();
         }
 
         private void GenerateRoom()
@@ -223,11 +223,32 @@ namespace Assets.Scripts.ProceduralSystem
             this.treeEdgeNodes = ans;
         }
 
+        public List<Vector2> interesectionPoints = new List<Vector2>();
         public void DetermineHallway()
         {
-            throw new System.NotImplementedException();
+            var hallWayThickness = 5f;
+
+            this.hallWayRects = new List<Rect>();
+            this.jointRects = new List<Rect>();
+           
+            foreach(var edge in this.treeEdgeNodes)
+            {
+                var aRect = edge.a.rect;
+                var bRect = edge.b.rect;
+                var intersectionPoint = edge.FindRectanularIntersection();
+                var joint = new Rect(intersectionPoint.x - hallWayThickness / 2, intersectionPoint.y - hallWayThickness / 2, hallWayThickness, hallWayThickness);
+
+                var aHallway = EdgeNode.RectBetweemTwoRects(aRect, joint , hallWayThickness);
+                var bHallway = EdgeNode.RectBetweemTwoRects(bRect, joint , hallWayThickness);
+
+                this.jointRects.Add(joint);
+                this.hallWayRects.Add(aHallway);
+                this.hallWayRects.Add(bHallway);
+            }
         }
 
+        public List<Rect> hallWayRects;
+        public List<Rect> jointRects;
 
         /// <summary>
         /// Check out TKdev's algorithm
