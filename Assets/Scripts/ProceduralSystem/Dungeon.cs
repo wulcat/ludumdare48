@@ -5,18 +5,17 @@ using System.Collections;
 using DelaunatorSharp;
 using DelaunatorSharp.Unity.Extensions;
 using ClipperLib;
-using System.Collections.Generic;
 
 // References: https://www.gamasutra.com/blogs/AAdonaac/20150903/252889/Procedural_Dungeon_Generation_Algorithm.php
 
 namespace Assets.Scripts.ProceduralSystem
 {
-    using Path = List<IntPoint>;
     using Paths = List<List<IntPoint>>;
 
     [Serializable]
     public class Dungeon : IDungeon
     {
+        public bool isReady = false;
         public Gateway startGateway;
         public Gateway exitGateway;
         /// <summary>
@@ -30,9 +29,13 @@ namespace Assets.Scripts.ProceduralSystem
 
         public DungeonConfig config;
 
+        [HideInInspector] public Vector3 entryPoint;
+        [HideInInspector] public Vector3 exitPoint;
+        [HideInInspector] public List<Vector3> spawnPoints;
+
         // snapping to pixels
         private float mTileSize = 1;
-        //private float mDistanceBetweenMainRoom = 1;
+
 
         // main room selection
         private float mWidthMean = 0f;
@@ -45,6 +48,8 @@ namespace Assets.Scripts.ProceduralSystem
         public List<Rect> hallWayRects;
         public List<Rect> jointRects;
         public Paths clipperOutput;
+
+        private List<Transform> wallClones;
 
         public Dungeon(DungeonConfig config , float tileSize) {
             this.config = config;
@@ -63,6 +68,14 @@ namespace Assets.Scripts.ProceduralSystem
             ExtendRectSize(1.2f);
             ClipPaths();
             InstantiateWalls();
+            FindEntryPoint();
+            FindExitPoint();
+            FindSpawnPoint();
+
+            SpawnPlayer();
+            SpawnEnemies();
+
+            this.isReady = true;
         }
 
 
@@ -110,8 +123,7 @@ namespace Assets.Scripts.ProceduralSystem
                     {
                         shouldBreak = true;
                     }
-                    var position = body.transform.position;
-
+                    //var position = body.transform.position;
                     //body.transform.position = new Vector3(RoundM(position.x, this.mTileSize), RoundM(position.y, this.mTileSize), position.z);
                 }
             }
@@ -385,19 +397,10 @@ namespace Assets.Scripts.ProceduralSystem
             Debug.Log("Tree Count: "+solution.Count);
         }
 
-        //public float distanceBetweenWalls = 1;
-        private float AngeleBetween(Vector2 a, Vector2 b)
-        {
-            var aMod = Mathf.Sqrt(a.x * a.x + a.y * a.y);
-            var bMod = Mathf.Sqrt(b.x * b.x + b.y * b.y);
-            var dot = a.x * b.x + a.y * b.y;
-
-            var angle = Mathf.Acos(dot / (aMod * bMod));
-
-            return angle;
-        }
         private void InstantiateWalls()
         {
+            this.wallClones = new List<Transform>();
+
             //var distanceBetweenWalls = 4;
             foreach (var path in this.clipperOutput)
             {
@@ -419,6 +422,103 @@ namespace Assets.Scripts.ProceduralSystem
                     this.mTileSize
                 );
             }
+        }
+
+        private void FindEntryPoint()
+        {
+            var leastPositionedWalls = new List<Transform>();
+            var leastEntryXValue = 9999f;
+            
+            // find the least x
+            for(var i = 0; i < this.wallClones.Count; i++)
+            {
+                if(this.wallClones[i].position.x < leastEntryXValue)
+                {
+                    leastEntryXValue = this.wallClones[i].position.x;
+                }
+            }
+
+            // find all the blocks in least x
+            foreach(var wall in this.wallClones)
+            {
+                if(AreNumberEqual(wall.position.x , leastEntryXValue))
+                {
+                    leastPositionedWalls.Add(wall);
+                }
+            }
+
+            // 
+            var centerXIndex = (int)(leastPositionedWalls.Count / 2);
+            leastPositionedWalls[centerXIndex].gameObject.SetActive(false);
+
+            this.entryPoint = leastPositionedWalls[centerXIndex].position;
+        }
+
+        private void FindExitPoint()
+        {
+            var maxPositionedWalls = new List<Transform>();
+            var maxEntryXValue = -9999f;
+
+            // find the least x
+            for (var i = 0; i < this.wallClones.Count; i++)
+            {
+                if (this.wallClones[i].position.x > maxEntryXValue)
+                {
+                    maxEntryXValue = this.wallClones[i].position.x;
+                }
+            }
+
+            // find all the blocks in least x
+            foreach (var wall in this.wallClones)
+            {
+                if (AreNumberEqual(wall.position.x, maxEntryXValue))
+                {
+                    maxPositionedWalls.Add(wall);
+                }
+            }
+
+            // 
+            var centerXIndex = (int)(maxPositionedWalls.Count / 2);
+            maxPositionedWalls[centerXIndex].gameObject.SetActive(false);
+
+            this.exitPoint = maxPositionedWalls[centerXIndex].position;
+        }
+
+        private void FindSpawnPoint()
+        {
+            this.spawnPoints = new List<Vector3>();
+
+            var entryPoint = new Rect(this.entryPoint.x, this.entryPoint.z, 5, 5);
+            var exitRect = new Rect(this.exitPoint.x, this.exitPoint.z, 5, 5);            
+
+            foreach (var floor in this.floorNodes)
+            {
+                if (floor.isMain) {
+                    if(!floor.rect.Overlaps(entryPoint) && !floor.rect.Overlaps(exitRect))
+                    {
+                        spawnPoints.Add(new Vector3(floor.rect.center.x, 0, floor.rect.center.y));
+                    }
+                }
+            }
+        }
+
+        private void SpawnPlayer() { }
+
+        private void SpawnEnemies()
+        {
+            for(var i = 0; i < this.spawnPoints.Count; i++)
+            {
+                var enemyPrefab = this.config.enemyPrefabs[UnityEngine.Random.Range(0 , this.config.enemyPrefabs.Count - 1)];
+                var clone = GameObject.Instantiate(enemyPrefab);
+                clone.transform.position = this.spawnPoints[i];
+            }
+        }
+
+        // ---------------------- extra functions
+
+        public static bool AreNumberEqual(float a , float b , float diff = 0.3f)
+        {
+            return Mathf.Abs(Mathf.Abs(a) - Mathf.Abs(b)) < diff;
         }
 
         private void InstantiateWallBetweenPoints(Vector2 pointA , Vector2 pointB , float distanceBetween)
@@ -469,6 +569,8 @@ namespace Assets.Scripts.ProceduralSystem
 
                 var wall = GameObject.Instantiate(this.config.wallPrefab);
                 wall.transform.position = newPoint;
+
+                this.wallClones.Add(wall.transform);
 
                 radius += distanceBetween;
             }
