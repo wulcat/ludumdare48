@@ -31,18 +31,25 @@ public class EnemyShoot : MonoBehaviour
     public bool inAirPlayed = false;
     [HideInInspector]
     public bool inAir = false;
-    void Start()
+
+    private bool mIsInit = false;
+    public void Initialize()
     {
         _canShoot = 1 / fireRate;
         player = GameManager.instance.player;
         objectPooler = ObjectPooler.instance;
         bulletPool = objectPooler.pools[0];
         enemy = GetComponent<Enemy>();
+
+        this.mIsInit = true; 
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!this.mIsInit)
+            return;
+
         if (Time.time >= _canShoot && enemy.isAlive && !inAir)
         {
             animator.SetTrigger("Shoot");

@@ -502,15 +502,19 @@ namespace Assets.Scripts.ProceduralSystem
             }
         }
 
-        private void SpawnPlayer() { }
+        private void SpawnPlayer() {
+            GameManager.instance.player.transform.position = new Vector3(this.entryPoint.x , 1 , this.entryPoint.z);
+        }
 
         private void SpawnEnemies()
         {
             for(var i = 0; i < this.spawnPoints.Count; i++)
             {
-                var enemyPrefab = this.config.enemyPrefabs[UnityEngine.Random.Range(0 , this.config.enemyPrefabs.Count - 1)];
-                var clone = GameObject.Instantiate(enemyPrefab);
-                clone.transform.position = this.spawnPoints[i];
+                //var enemyPrefab = this.config.enemyPrefabs[UnityEngine.Random.Range(0 , this.config.enemyPrefabs.Count - 1)];
+                //var clone = GameObject.Instantiate(enemyPrefab);
+                //clone.transform.position = this.spawnPoints[i];
+                var clone = ObjectPooler.instance.SpawnFromPool("Enemy", this.spawnPoints[i], Quaternion.identity, ObjectPooler.instance.pools[4]);
+                clone.GetComponentInChildren<EnemyShoot>().Initialize();
             }
         }
 
