@@ -61,7 +61,7 @@ namespace Assets.Scripts.ProceduralSystem
             if (this.dungeon.treeEdgeNodes == null)
                 return;
 
-            //DrawMinTreeSpan();
+            DrawMinTreeSpan();
             //DrawIntersections();
             //DrawMainRoom();
             //DrawHallwayRect();

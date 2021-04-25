@@ -10,7 +10,6 @@ using ClipperLib;
 
 namespace Assets.Scripts.ProceduralSystem
 {
-    using Path = List<IntPoint>;
     using Paths = List<List<IntPoint>>;
 
     [Serializable]
@@ -31,7 +30,7 @@ namespace Assets.Scripts.ProceduralSystem
 
         // snapping to pixels
         private float mTileSize = 1;
-        //private float mDistanceBetweenMainRoom = 1;
+
 
         // main room selection
         private float mWidthMean = 0f;
@@ -44,6 +43,10 @@ namespace Assets.Scripts.ProceduralSystem
         public List<Rect> hallWayRects;
         public List<Rect> jointRects;
         public Paths clipperOutput;
+
+        private List<Transform> wallClones;
+        private Vector3 entryPoint;
+        private Vector3 exitPoint;
 
         public Dungeon(DungeonConfig config , float tileSize) {
             this.config = config;
@@ -62,6 +65,8 @@ namespace Assets.Scripts.ProceduralSystem
             ExtendRectSize(1.2f);
             ClipPaths();
             InstantiateWalls();
+            CreateEntryPoint();
+            CreateExitPoint();
         }
 
 
@@ -109,8 +114,7 @@ namespace Assets.Scripts.ProceduralSystem
                     {
                         shouldBreak = true;
                     }
-                    var position = body.transform.position;
-
+                    //var position = body.transform.position;
                     //body.transform.position = new Vector3(RoundM(position.x, this.mTileSize), RoundM(position.y, this.mTileSize), position.z);
                 }
             }
@@ -384,19 +388,10 @@ namespace Assets.Scripts.ProceduralSystem
             Debug.Log("Tree Count: "+solution.Count);
         }
 
-        //public float distanceBetweenWalls = 1;
-        private float AngeleBetween(Vector2 a, Vector2 b)
-        {
-            var aMod = Mathf.Sqrt(a.x * a.x + a.y * a.y);
-            var bMod = Mathf.Sqrt(b.x * b.x + b.y * b.y);
-            var dot = a.x * b.x + a.y * b.y;
-
-            var angle = Mathf.Acos(dot / (aMod * bMod));
-
-            return angle;
-        }
         private void InstantiateWalls()
         {
+            this.wallClones = new List<Transform>();
+
             //var distanceBetweenWalls = 4;
             foreach (var path in this.clipperOutput)
             {
@@ -418,6 +413,73 @@ namespace Assets.Scripts.ProceduralSystem
                     this.mTileSize
                 );
             }
+        }
+
+        private void CreateEntryPoint()
+        {
+            var leastPositionedWalls = new List<Transform>();
+            var leastEntryXValue = 9999f;
+            
+            // find the least x
+            for(var i = 0; i < this.wallClones.Count; i++)
+            {
+                if(this.wallClones[i].position.x < leastEntryXValue)
+                {
+                    leastEntryXValue = this.wallClones[i].position.x;
+                }
+            }
+
+            // find all the blocks in least x
+            foreach(var wall in this.wallClones)
+            {
+                if(AreNumberEqual(wall.position.x , leastEntryXValue))
+                {
+                    leastPositionedWalls.Add(wall);
+                }
+            }
+
+            // 
+            var centerXIndex = (int)(leastPositionedWalls.Count / 2);
+            leastPositionedWalls[centerXIndex].gameObject.SetActive(false);
+
+            this.entryPoint = leastPositionedWalls[centerXIndex].position;
+        }
+
+        private void CreateExitPoint()
+        {
+            var maxPositionedWalls = new List<Transform>();
+            var maxEntryXValue = -9999f;
+
+            // find the least x
+            for (var i = 0; i < this.wallClones.Count; i++)
+            {
+                if (this.wallClones[i].position.x > maxEntryXValue)
+                {
+                    maxEntryXValue = this.wallClones[i].position.x;
+                }
+            }
+
+            // find all the blocks in least x
+            foreach (var wall in this.wallClones)
+            {
+                if (AreNumberEqual(wall.position.x, maxEntryXValue))
+                {
+                    maxPositionedWalls.Add(wall);
+                }
+            }
+
+            // 
+            var centerXIndex = (int)(maxPositionedWalls.Count / 2);
+            maxPositionedWalls[centerXIndex].gameObject.SetActive(false);
+
+            this.exitPoint = maxPositionedWalls[centerXIndex].position;
+        }
+
+        // ---------------------- extra functions
+
+        public static bool AreNumberEqual(float a , float b , float diff = 0.3f)
+        {
+            return Mathf.Abs(Mathf.Abs(a) - Mathf.Abs(b)) < diff;
         }
 
         private void InstantiateWallBetweenPoints(Vector2 pointA , Vector2 pointB , float distanceBetween)
@@ -468,6 +530,8 @@ namespace Assets.Scripts.ProceduralSystem
 
                 var wall = GameObject.Instantiate(this.config.wallPrefab);
                 wall.transform.position = newPoint;
+
+                this.wallClones.Add(wall.transform);
 
                 radius += distanceBetween;
             }
