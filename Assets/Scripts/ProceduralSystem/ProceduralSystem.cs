@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DelaunatorSharp.Unity.Extensions;
+using ClipperLib;
 
 namespace Assets.Scripts.ProceduralSystem
 {
@@ -44,6 +45,7 @@ namespace Assets.Scripts.ProceduralSystem
             throw new System.NotImplementedException();
         }
 
+        
 
         public void OnDrawGizmos()
         {
@@ -52,6 +54,24 @@ namespace Assets.Scripts.ProceduralSystem
 
             Gizmos.DrawWireSphere(transform.position, this.dungeon.config.dungeonRadius);
 
+            //DrawRooms();
+            //DrawTriangulation();
+
+            // Draw the min span output
+            if (this.dungeon.treeEdgeNodes == null)
+                return;
+
+            //DrawMinTreeSpan();
+            DrawIntersections();
+            //DrawMainRoom();
+            //DrawHallwayRect();
+            //DrawRoomJoints();
+
+            DrawClip();
+        }
+
+        private void DrawRooms()
+        {
             for (var i = 0; i < this.dungeon.floorNodes.Count; i++)
             {
                 var room = this.dungeon.floorNodes[i];
@@ -83,80 +103,81 @@ namespace Assets.Scripts.ProceduralSystem
                     new Vector3(rect.xMax, 0, rect.yMax)
                 );
             }
+        }
+        private void DrawMainRoom() {
+            // Draw intersectin hallway lines
+            Gizmos.color = Color.red;
+            foreach (var edgeNode in this.dungeon.treeEdgeNodes)
+            {
+                var aRect = edgeNode.a.rect;
+                Gizmos.DrawLine( // bottom line
+                    new Vector3(aRect.xMin, 0, aRect.yMin),
+                    new Vector3(aRect.xMax, 0, aRect.yMin)
+                );
+                Gizmos.DrawLine( // left line
+                    new Vector3(aRect.xMin, 0, aRect.yMin),
+                    new Vector3(aRect.xMin, 0, aRect.yMax)
+                );
+                Gizmos.DrawLine( // right line
+                    new Vector3(aRect.xMax, 0, aRect.yMin),
+                    new Vector3(aRect.xMax, 0, aRect.yMax)
+                );
+                Gizmos.DrawLine( // top line
+                    new Vector3(aRect.xMin, 0, aRect.yMax),
+                    new Vector3(aRect.xMax, 0, aRect.yMax)
+                );
 
-            //// Draw the triangulator output
-            //if (this.dungeon.delaunator == null)
-            //    return;
-
-            //Gizmos.color = Color.green;
-
-            //this.dungeon.delaunator.ForEachTriangleEdge(edge =>
-            //{
-            //    var pointA = edge.P.ToVector3();
-            //    var pointB = edge.Q.ToVector3();
-
-            //    Gizmos.DrawLine(new Vector3(pointA.x, 0 , pointA.y) , new Vector3(pointB.x, 0 , pointB.y));
-            //});
-
-            // Draw the min span output
-            if (this.dungeon.treeEdgeNodes == null)
+                var bRect = edgeNode.b.rect;
+                Gizmos.DrawLine( // bottom line
+                    new Vector3(bRect.xMin, 0, bRect.yMin),
+                    new Vector3(bRect.xMax, 0, bRect.yMin)
+                );
+                Gizmos.DrawLine( // left line
+                    new Vector3(bRect.xMin, 0, bRect.yMin),
+                    new Vector3(bRect.xMin, 0, bRect.yMax)
+                );
+                Gizmos.DrawLine( // right line
+                    new Vector3(bRect.xMax, 0, bRect.yMin),
+                    new Vector3(bRect.xMax, 0, bRect.yMax)
+                );
+                Gizmos.DrawLine( // top line
+                    new Vector3(bRect.xMin, 0, bRect.yMax),
+                    new Vector3(bRect.xMax, 0, bRect.yMax)
+                );
+            }
+        }
+        private void DrawTriangulation()
+        {
+            // Draw the triangulator output
+            if (this.dungeon.delaunator == null)
                 return;
 
-            //Gizmos.color = Color.black;
+            Gizmos.color = Color.green;
 
-            //foreach (var edgeNode in this.dungeon.treeEdgeNodes)
-            //{
-            //    var pointA = edgeNode.a.rect.center;
-            //    var pointB = edgeNode.b.rect.center;
+            this.dungeon.delaunator.ForEachTriangleEdge(edge =>
+            {
+                var pointA = edge.P.ToVector3();
+                var pointB = edge.Q.ToVector3();
 
-            //    Gizmos.DrawLine(
-            //        new Vector3(pointA.x, 0, pointA.y),
-            //        new Vector3(pointB.x, 0, pointB.y)
-            //    );
-            //}
+                Gizmos.DrawLine(new Vector3(pointA.x, 0, pointA.y), new Vector3(pointB.x, 0, pointB.y));
+            });
+        }
+        private void DrawMinTreeSpan()
+        {
+            Gizmos.color = Color.black;
 
-            //// Draw intersectin hallway lines
-            //Gizmos.color = Color.red;
-            //foreach (var edgeNode in this.dungeon.treeEdgeNodes)
-            //{
-            //    var aRect = edgeNode.a.rect;
-            //    Gizmos.DrawLine( // bottom line
-            //        new Vector3(aRect.xMin, 0, aRect.yMin),
-            //        new Vector3(aRect.xMax, 0, aRect.yMin)
-            //    );
-            //    Gizmos.DrawLine( // left line
-            //        new Vector3(aRect.xMin, 0, aRect.yMin),
-            //        new Vector3(aRect.xMin, 0, aRect.yMax)
-            //    );
-            //    Gizmos.DrawLine( // right line
-            //        new Vector3(aRect.xMax, 0, aRect.yMin),
-            //        new Vector3(aRect.xMax, 0, aRect.yMax)
-            //    );
-            //    Gizmos.DrawLine( // top line
-            //        new Vector3(aRect.xMin, 0, aRect.yMax),
-            //        new Vector3(aRect.xMax, 0, aRect.yMax)
-            //    );
+            foreach (var edgeNode in this.dungeon.treeEdgeNodes)
+            {
+                var pointA = edgeNode.a.rect.center;
+                var pointB = edgeNode.b.rect.center;
 
-            //    var bRect = edgeNode.b.rect;
-            //    Gizmos.DrawLine( // bottom line
-            //        new Vector3(bRect.xMin, 0, bRect.yMin),
-            //        new Vector3(bRect.xMax, 0, bRect.yMin)
-            //    );
-            //    Gizmos.DrawLine( // left line
-            //        new Vector3(bRect.xMin, 0, bRect.yMin),
-            //        new Vector3(bRect.xMin, 0, bRect.yMax)
-            //    );
-            //    Gizmos.DrawLine( // right line
-            //        new Vector3(bRect.xMax, 0, bRect.yMin),
-            //        new Vector3(bRect.xMax, 0, bRect.yMax)
-            //    );
-            //    Gizmos.DrawLine( // top line
-            //        new Vector3(bRect.xMin, 0, bRect.yMax),
-            //        new Vector3(bRect.xMax, 0, bRect.yMax)
-            //    );
-            //}
-
-
+                Gizmos.DrawLine(
+                    new Vector3(pointA.x, 0, pointA.y),
+                    new Vector3(pointB.x, 0, pointB.y)
+                );
+            }
+        }
+        private void DrawIntersections() {
             // Draw intersectin hallway lines
             Gizmos.color = Color.cyan;
             foreach (var edgeNode in this.dungeon.treeEdgeNodes)
@@ -177,7 +198,32 @@ namespace Assets.Scripts.ProceduralSystem
 
                 Gizmos.DrawWireSphere(new Vector3(intersectionPoint.x, 0, intersectionPoint.y), 1f);
             }
+        }
+        private void DrawHallwayRect() {
+            Gizmos.color = Color.green;
 
+            foreach (var hallway in this.dungeon.hallWayRects)
+            {
+                var rect = hallway;
+                Gizmos.DrawLine( // bottom line
+                    new Vector3(rect.xMin, 0, rect.yMin),
+                    new Vector3(rect.xMax, 0, rect.yMin)
+                );
+                Gizmos.DrawLine( // left line
+                    new Vector3(rect.xMin, 0, rect.yMin),
+                    new Vector3(rect.xMin, 0, rect.yMax)
+                );
+                Gizmos.DrawLine( // right line
+                    new Vector3(rect.xMax, 0, rect.yMin),
+                    new Vector3(rect.xMax, 0, rect.yMax)
+                );
+                Gizmos.DrawLine( // top line
+                    new Vector3(rect.xMin, 0, rect.yMax),
+                    new Vector3(rect.xMax, 0, rect.yMax)
+                );
+            }
+        }
+        private void DrawRoomJoints() {
             // Draw main room joints
             Gizmos.color = Color.cyan;
 
@@ -201,29 +247,39 @@ namespace Assets.Scripts.ProceduralSystem
                     new Vector3(rect.xMax, 0, rect.yMax)
                 );
             }
+        }
+        private void DrawClip()
+        {
+            if (this.dungeon.clipperOutput == null)
+                return;
 
-            Gizmos.color = Color.green;
+            Gizmos.color = Color.black;
 
-            foreach (var hallway in this.dungeon.hallWayRects)
+            foreach (var path in this.dungeon.clipperOutput)
             {
-                var rect = hallway;
-                Gizmos.DrawLine( // bottom line
-                    new Vector3(rect.xMin, 0, rect.yMin),
-                    new Vector3(rect.xMax, 0, rect.yMin)
+                IntPoint previousPoint = path[0];
+                for (var i = 1; i < path.Count; i++)
+                {
+                    Gizmos.DrawLine(
+                        new Vector3(previousPoint.X, 0, previousPoint.Y),
+                        new Vector3(path[i].X, 0, path[i].Y)
+                    );
+
+                    previousPoint = path[i];
+                }
+
+                // close the lines
+                Gizmos.DrawLine(
+                    new Vector3(path[0].X, 0, path[0].Y),
+                    new Vector3(path[path.Count-1].X, 0, path[path.Count - 1].Y)
                 );
-                Gizmos.DrawLine( // left line
-                    new Vector3(rect.xMin, 0, rect.yMin),
-                    new Vector3(rect.xMin, 0, rect.yMax)
-                );
-                Gizmos.DrawLine( // right line
-                    new Vector3(rect.xMax, 0, rect.yMin),
-                    new Vector3(rect.xMax, 0, rect.yMax)
-                );
-                Gizmos.DrawLine( // top line
-                    new Vector3(rect.xMin, 0, rect.yMax),
-                    new Vector3(rect.xMax, 0, rect.yMax)
-                );
+
+                foreach (var point in path)
+                {
+                    Gizmos.DrawWireSphere(new Vector3(point.X, 0.5f, point.Y), 1f);
+                }
             }
+
         }
     }
 }

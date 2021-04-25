@@ -4,11 +4,16 @@ using System.Collections.Generic;
 using System.Collections;
 using DelaunatorSharp;
 using DelaunatorSharp.Unity.Extensions;
+using ClipperLib;
+using System.Collections.Generic;
 
 // References: https://www.gamasutra.com/blogs/AAdonaac/20150903/252889/Procedural_Dungeon_Generation_Algorithm.php
 
 namespace Assets.Scripts.ProceduralSystem
 {
+    using Path = List<IntPoint>;
+    using Paths = List<List<IntPoint>>;
+
     [Serializable]
     public class Dungeon : IDungeon
     {
@@ -27,6 +32,7 @@ namespace Assets.Scripts.ProceduralSystem
 
         // snapping to pixels
         private float mTileSize = 1;
+        //private float mDistanceBetweenMainRoom = 1;
 
         // main room selection
         private float mWidthMean = 0f;
@@ -36,9 +42,11 @@ namespace Assets.Scripts.ProceduralSystem
         public Delaunator delaunator;
         public HashSet<EdgeNode> roomGraph;
         public List<EdgeNode> treeEdgeNodes;
+        public List<Rect> hallWayRects;
+        public List<Rect> jointRects;
+        public Paths clipperOutput;
 
-        public Dungeon(DungeonConfig config , float tileSize)
-        {
+        public Dungeon(DungeonConfig config , float tileSize) {
             this.config = config;
             this.mTileSize = tileSize;
         }
@@ -47,12 +55,16 @@ namespace Assets.Scripts.ProceduralSystem
         {
             GenerateRoom();
             yield return SeparateRoom(simulationCube);
-            DetermineMainRooms();
+            yield return DetermineMainRooms();
             TriangulateRoom();
             GenerateGraph();
             MinimumSpanningTree(this.roomGraph);
             DetermineHallway();
+            ExtendRectSize(1.2f);
+            ClipPaths();
+            InstantiateWalls();
         }
+
 
         private void GenerateRoom()
         {
@@ -65,7 +77,7 @@ namespace Assets.Scripts.ProceduralSystem
             {
                 var position = GetRandomPointInCircle(this.config.dungeonRadius);
                 var rect = new Rect(position.x, position.y, roomSize.GetRandom(), roomSize.GetRandom());
-                var roomNode = new FloorNode(rect);
+                var roomNode = new FloorNode(i , rect);
 
                 this.floorNodes.Add(roomNode);
             }
@@ -125,8 +137,12 @@ namespace Assets.Scripts.ProceduralSystem
             Debug.Log("Everybody is sleeping now");
         }
 
-        private void DetermineMainRooms(float minThreshold = 1.25f)
+        private IEnumerator DetermineMainRooms(float minThreshold = 1.25f , int count = 0)
         {
+            yield return new WaitForEndOfFrame(); 
+
+            count++;
+            //Debug.Log(minThreshold + " : " + count);
             var roomCount = this.floorNodes.Count - 1;
             var mainRoomMinWidth = (this.mWidthMean / roomCount) * minThreshold;
             var mainRoomMinHeight = (this.mHeightMean / roomCount) * minThreshold;
@@ -137,14 +153,36 @@ namespace Assets.Scripts.ProceduralSystem
                 var room = this.floorNodes[i];
                 if(room.rect.width > mainRoomMinWidth && room.rect.height > mainRoomMinHeight)
                 {
-                    room.isMain = true;
-                    mainRoomCount++;
+                    if(CheckDistanceWithAllMainRooms(room))
+                    {
+                        room.isMain = true;
+                        mainRoomCount++;
+                    }
                 }
             }
 
             // Make sure have min 3 main rooms for triangulation
             if (mainRoomCount < this.config.minMainRoomCount)
-                DetermineMainRooms(minThreshold - 0.05f);
+                yield return DetermineMainRooms(minThreshold - 0.01f , count);
+        }
+
+        private bool CheckDistanceWithAllMainRooms(FloorNode node)
+        {
+            var isFar = true;
+            for (var j = 0; j < this.floorNodes.Count; j++)
+            {
+                var room = this.floorNodes[j];
+                if (room.id != node.id && room.isMain)
+                {
+                    if (Vector3.Distance(room.rect.center, node.rect.center) < this.config.distanceBetweenMainRoom)
+                    {
+                        isFar = false;
+                        break;
+                    }
+                }
+            }
+
+            return isFar;
         }
 
         private void TriangulateRoom()
@@ -223,10 +261,10 @@ namespace Assets.Scripts.ProceduralSystem
             this.treeEdgeNodes = ans;
         }
 
-        public List<Vector2> interesectionPoints = new List<Vector2>();
+        
         public void DetermineHallway()
         {
-            var hallWayThickness = 5f;
+            var hallWayThickness = this.config.hallWayThickness;
 
             this.hallWayRects = new List<Rect>();
             this.jointRects = new List<Rect>();
@@ -247,8 +285,194 @@ namespace Assets.Scripts.ProceduralSystem
             }
         }
 
-        public List<Rect> hallWayRects;
-        public List<Rect> jointRects;
+        
+        
+        private void ExtendRectSize(float extendSize)
+        {
+            for(var i = 0; i  < this.jointRects.Count; i++)
+            {
+                var joint = this.jointRects[i];
+                var width = joint.width * extendSize;
+                var height = joint.height* extendSize;
+
+                this.jointRects[i] = new Rect(joint.center.x - width / 2 , joint.center.y - height / 2, width , height);
+            }
+
+            for (var i = 0; i < this.hallWayRects.Count; i++)
+            {
+                var hallway = this.hallWayRects[i];
+                var width = hallway.width * extendSize;
+                var height = hallway.height * extendSize;
+
+                this.hallWayRects[i] = new Rect(hallway.center.x - width / 2, hallway.center.y - height / 2, width, height);
+            }
+
+            for (var i = 0; i < this.floorNodes.Count; i++)
+            {
+                if (this.floorNodes[i].isMain)
+                {
+                    var floor = this.floorNodes[i].rect;
+
+                    var width = floor.width * extendSize;
+                    var height = floor.height * extendSize;
+
+                    this.floorNodes[i].rect = new Rect(floor.center.x - width / 2, floor.center.y - height / 2, width, height);
+                }
+            }
+        }
+
+        private void ClipPaths()
+        {
+            var clipper = new Clipper();
+
+            foreach (var hallWayRect in this.hallWayRects)
+            {
+                clipper.AddPath(
+                    new List<IntPoint>
+                    {
+                        new IntPoint(hallWayRect.xMin , hallWayRect.yMin) ,
+                        new IntPoint(hallWayRect.xMax , hallWayRect.yMin) ,
+                        new IntPoint(hallWayRect.xMax , hallWayRect.yMax) ,
+                        new IntPoint(hallWayRect.xMin , hallWayRect.yMax)
+                    },
+                    PolyType.ptClip,
+                    true
+                );
+            }
+
+            foreach (var jointRect in this.jointRects)
+            {
+                clipper.AddPath(
+                    new List<IntPoint>
+                    {
+                        new IntPoint(jointRect.xMin , jointRect.yMin) ,
+                        new IntPoint(jointRect.xMax , jointRect.yMin) ,
+                        new IntPoint(jointRect.xMax , jointRect.yMax) ,
+                        new IntPoint(jointRect.xMin , jointRect.yMax)
+                    },
+                    PolyType.ptClip,
+                    true
+                );
+            }
+
+            foreach (var floor in this.floorNodes)
+            {
+                if (floor.isMain)
+                {
+                    var rect = floor.rect;
+                    
+                    clipper.AddPath(
+                        new List<IntPoint>
+                        {
+                        new IntPoint(rect.xMin , rect.yMin) ,
+                        new IntPoint(rect.xMax , rect.yMin) ,
+                        new IntPoint(rect.xMax , rect.yMax) ,
+                        new IntPoint(rect.xMin , rect.yMax)
+                        },
+                        PolyType.ptSubject,
+                        true
+                    );
+                }
+            }
+
+
+            Paths solution = new Paths();
+
+            clipper.Execute(ClipType.ctUnion, solution, PolyFillType.pftPositive);
+
+            this.clipperOutput = solution;
+
+            Debug.Log("Tree Count: "+solution.Count);
+        }
+
+        //public float distanceBetweenWalls = 1;
+        private float AngeleBetween(Vector2 a, Vector2 b)
+        {
+            var aMod = Mathf.Sqrt(a.x * a.x + a.y * a.y);
+            var bMod = Mathf.Sqrt(b.x * b.x + b.y * b.y);
+            var dot = a.x * b.x + a.y * b.y;
+
+            var angle = Mathf.Acos(dot / (aMod * bMod));
+
+            return angle;
+        }
+        private void InstantiateWalls()
+        {
+            //var distanceBetweenWalls = 4;
+            foreach (var path in this.clipperOutput)
+            {
+                IntPoint previousPoint = path[0];
+                for (var i = 1; i < path.Count; i++)
+                {
+                    InstantiateWallBetweenPoints(
+                        new Vector2(previousPoint.X, previousPoint.Y),
+                        new Vector2(path[i].X, path[i].Y),
+                        this.mTileSize
+                    );
+
+                    previousPoint = path[i];
+                }
+
+                InstantiateWallBetweenPoints(
+                    new Vector2(path[0].X, path[0].Y),
+                    new Vector2(path[path.Count - 1].X, path[path.Count - 1].Y) ,
+                    this.mTileSize
+                );
+            }
+        }
+
+        private void InstantiateWallBetweenPoints(Vector2 pointA , Vector2 pointB , float distanceBetween)
+        {
+            var angle = 45f;
+            var direction = 1;
+
+            if (Mathf.Abs(Mathf.Abs(pointA.y) - Mathf.Abs(pointB.y)) < 0.3f)
+            {
+                if (pointA.x < pointB.x)
+                {
+                    angle = 0f;
+                    direction = 1;
+                }
+                else
+                {
+                    angle = 0f;
+                    direction = -1;
+                }
+            }
+
+            if (Mathf.Abs(Mathf.Abs(pointA.x) - Mathf.Abs(pointB.x)) < 0.3f)
+            {
+                if (pointA.y < pointB.y)
+                {
+                    angle = 90f;
+                    direction = 1;
+                }
+                else
+                {
+                    angle = 90f;
+                    direction = -1;
+                }
+            }
+
+            angle *= Mathf.Deg2Rad;
+
+            var distance = Vector3.Distance(pointA, pointB);
+            var radius = 0f;
+
+            while (radius < distance)
+            {
+                var newPoint = new Vector3(
+                    pointA.x + direction * Mathf.Cos(angle) * radius,
+                    0,
+                    pointA.y + direction * Mathf.Sin(angle) * radius
+                );
+
+                var wall = GameObject.Instantiate(this.config.wallPrefab);
+                wall.transform.position = newPoint;
+
+                radius += distanceBetween;
+            }
+        }
 
         /// <summary>
         /// Check out TKdev's algorithm
