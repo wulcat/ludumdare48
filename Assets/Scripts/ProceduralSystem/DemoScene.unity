@@ -15,9 +15,9 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
   m_Fog: 1
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_FogColor: {r: 0.24705882, g: 0.21176471, b: 0.11372549, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.01
+  m_FogDensity: 0.04
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
@@ -385,9 +385,57 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7100024644078078983, guid: fbf136cb16327ec4eb1cfc8e80ff7c64, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7100024644078078983, guid: fbf136cb16327ec4eb1cfc8e80ff7c64, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7100024644078078983, guid: fbf136cb16327ec4eb1cfc8e80ff7c64, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7100024644078078983, guid: fbf136cb16327ec4eb1cfc8e80ff7c64, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7960022522662291569, guid: fbf136cb16327ec4eb1cfc8e80ff7c64, type: 3}
       propertyPath: m_Name
       value: HUD
+      objectReference: {fileID: 0}
+    - target: {fileID: 8235807369492817855, guid: fbf136cb16327ec4eb1cfc8e80ff7c64, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8235807369492817855, guid: fbf136cb16327ec4eb1cfc8e80ff7c64, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8235807369492817855, guid: fbf136cb16327ec4eb1cfc8e80ff7c64, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8235807369492817855, guid: fbf136cb16327ec4eb1cfc8e80ff7c64, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9211996320409760532, guid: fbf136cb16327ec4eb1cfc8e80ff7c64, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9211996320409760532, guid: fbf136cb16327ec4eb1cfc8e80ff7c64, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9211996320409760532, guid: fbf136cb16327ec4eb1cfc8e80ff7c64, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9211996320409760532, guid: fbf136cb16327ec4eb1cfc8e80ff7c64, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fbf136cb16327ec4eb1cfc8e80ff7c64, type: 3}
@@ -402,6 +450,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5715997916789937352, guid: b5ffceec466d4194ba4e851ef27c672c, type: 3}
+      propertyPath: startingWeapon
+      value: 
+      objectReference: {fileID: 5791320680963339421, guid: 1b28315223aeb2149b7fb8c8101208ae, type: 3}
     - target: {fileID: 5715997916789937354, guid: b5ffceec466d4194ba4e851ef27c672c, type: 3}
       propertyPath: m_RootOrder
       value: 7
