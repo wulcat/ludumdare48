@@ -12,6 +12,7 @@ namespace Assets.Scripts.ProceduralSystem
         public IntRangeValue roomGenerateCountRange = new IntRangeValue(20, 30);
         public FloatRangeValue roomGenerateSizeRange = new FloatRangeValue(0.5f, 1f);
         public float distanceBetweenMainRoom = 5;
+        public float hallWayThickness = 5;
 
         public GameObject floorPrefab;
         public GameObject wallPrefab;

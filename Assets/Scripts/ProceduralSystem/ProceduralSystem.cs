@@ -255,10 +255,9 @@ namespace Assets.Scripts.ProceduralSystem
 
             Gizmos.color = Color.black;
 
-            IntPoint previousPoint;
             foreach (var path in this.dungeon.clipperOutput)
             {
-                previousPoint = path[0];
+                IntPoint previousPoint = path[0];
                 for (var i = 1; i < path.Count; i++)
                 {
                     Gizmos.DrawLine(
@@ -266,11 +265,10 @@ namespace Assets.Scripts.ProceduralSystem
                         new Vector3(path[i].X, 0, path[i].Y)
                     );
 
-                    
-
                     previousPoint = path[i];
                 }
 
+                // close the lines
                 Gizmos.DrawLine(
                     new Vector3(path[0].X, 0, path[0].Y),
                     new Vector3(path[path.Count-1].X, 0, path[path.Count - 1].Y)

@@ -42,15 +42,13 @@ namespace Assets.Scripts.ProceduralSystem
         public Delaunator delaunator;
         public HashSet<EdgeNode> roomGraph;
         public List<EdgeNode> treeEdgeNodes;
+        public List<Rect> hallWayRects;
+        public List<Rect> jointRects;
+        public Paths clipperOutput;
 
         public Dungeon(DungeonConfig config , float tileSize) {
             this.config = config;
             this.mTileSize = tileSize;
-
-            //if(this.config.distanceBetweenMainRoom < this.config.roomGenerateSizeRange.max + 2)
-            //{
-            //    this.config.distanceBetweenMainRoom = this.config.roomGenerateSizeRange.max + 2;
-            //}
         }
 
         public IEnumerator Generate(GameObject simulationCube)
@@ -64,6 +62,7 @@ namespace Assets.Scripts.ProceduralSystem
             DetermineHallway();
             ExtendRectSize(1.2f);
             ClipPaths();
+            InstantiateWalls();
         }
 
 
@@ -180,12 +179,6 @@ namespace Assets.Scripts.ProceduralSystem
                         isFar = false;
                         break;
                     }
-                    //if(Mathf.Abs(Mathf.Abs(room.rect.center.x) - Mathf.Abs(node.rect.center.x)) < this.config.distanceBetweenMainRoom ||
-                    //   Mathf.Abs(Mathf.Abs(room.rect.center.y) - Mathf.Abs(node.rect.center.y)) < this.config.distanceBetweenMainRoom)
-                    //{
-                    //    isFar = false;
-                    //    break;
-                    //}
                 }
             }
 
@@ -271,7 +264,7 @@ namespace Assets.Scripts.ProceduralSystem
         
         public void DetermineHallway()
         {
-            var hallWayThickness = 5f;
+            var hallWayThickness = this.config.hallWayThickness;
 
             this.hallWayRects = new List<Rect>();
             this.jointRects = new List<Rect>();
@@ -327,12 +320,6 @@ namespace Assets.Scripts.ProceduralSystem
                 }
             }
         }
-
-
-        public List<Rect> hallWayRects;
-        public List<Rect> jointRects;
-        public Paths clipperOutput;
-
 
         private void ClipPaths()
         {
@@ -391,7 +378,6 @@ namespace Assets.Scripts.ProceduralSystem
 
             Paths solution = new Paths();
 
-            //clipper.Execute(ClipType.ctUnion, solution, PolyFillType.pftEvenOdd, PolyFillType.pftEvenOdd);
             clipper.Execute(ClipType.ctUnion, solution, PolyFillType.pftPositive);
 
             this.clipperOutput = solution;
@@ -399,6 +385,94 @@ namespace Assets.Scripts.ProceduralSystem
             Debug.Log("Tree Count: "+solution.Count);
         }
 
+        //public float distanceBetweenWalls = 1;
+        private float AngeleBetween(Vector2 a, Vector2 b)
+        {
+            var aMod = Mathf.Sqrt(a.x * a.x + a.y * a.y);
+            var bMod = Mathf.Sqrt(b.x * b.x + b.y * b.y);
+            var dot = a.x * b.x + a.y * b.y;
+
+            var angle = Mathf.Acos(dot / (aMod * bMod));
+
+            return angle;
+        }
+        private void InstantiateWalls()
+        {
+            //var distanceBetweenWalls = 4;
+            foreach (var path in this.clipperOutput)
+            {
+                IntPoint previousPoint = path[0];
+                for (var i = 1; i < path.Count; i++)
+                {
+                    InstantiateWallBetweenPoints(
+                        new Vector2(previousPoint.X, previousPoint.Y),
+                        new Vector2(path[i].X, path[i].Y),
+                        this.mTileSize
+                    );
+
+                    previousPoint = path[i];
+                }
+
+                InstantiateWallBetweenPoints(
+                    new Vector2(path[0].X, path[0].Y),
+                    new Vector2(path[path.Count - 1].X, path[path.Count - 1].Y) ,
+                    this.mTileSize
+                );
+            }
+        }
+
+        private void InstantiateWallBetweenPoints(Vector2 pointA , Vector2 pointB , float distanceBetween)
+        {
+            var angle = 45f;
+            var direction = 1;
+
+            if (Mathf.Abs(Mathf.Abs(pointA.y) - Mathf.Abs(pointB.y)) < 0.3f)
+            {
+                if (pointA.x < pointB.x)
+                {
+                    angle = 0f;
+                    direction = 1;
+                }
+                else
+                {
+                    angle = 0f;
+                    direction = -1;
+                }
+            }
+
+            if (Mathf.Abs(Mathf.Abs(pointA.x) - Mathf.Abs(pointB.x)) < 0.3f)
+            {
+                if (pointA.y < pointB.y)
+                {
+                    angle = 90f;
+                    direction = 1;
+                }
+                else
+                {
+                    angle = 90f;
+                    direction = -1;
+                }
+            }
+
+            angle *= Mathf.Deg2Rad;
+
+            var distance = Vector3.Distance(pointA, pointB);
+            var radius = 0f;
+
+            while (radius < distance)
+            {
+                var newPoint = new Vector3(
+                    pointA.x + direction * Mathf.Cos(angle) * radius,
+                    0,
+                    pointA.y + direction * Mathf.Sin(angle) * radius
+                );
+
+                var wall = GameObject.Instantiate(this.config.wallPrefab);
+                wall.transform.position = newPoint;
+
+                radius += distanceBetween;
+            }
+        }
 
         /// <summary>
         /// Check out TKdev's algorithm
