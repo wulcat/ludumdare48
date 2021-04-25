@@ -9,7 +9,7 @@ using DelaunatorSharp.Unity.Extensions;
 
 namespace Assets.Scripts.ProceduralSystem
 {
-    //[Serializable]
+    [Serializable]
     public class Dungeon : IDungeon
     {
         public Gateway startGateway;
@@ -34,7 +34,8 @@ namespace Assets.Scripts.ProceduralSystem
 
         //
         public Delaunator delaunator;
-        public RoomNode roomGraph;
+        public HashSet<EdgeNode> roomGraph;
+        public List<EdgeNode> treeEdgeNodes;
 
         public Dungeon(DungeonConfig config , float tileSize)
         {
@@ -48,9 +49,9 @@ namespace Assets.Scripts.ProceduralSystem
             yield return SeparateRoom(simulationCube);
             DetermineMainRooms();
             TriangulateRoom();
-            //GenerateGraph();
-            //MinSpanningTree();
-            //DetermineHallway();
+            GenerateGraph();
+            MinimumSpanningTree(this.roomGraph);
+            DetermineHallway();
         }
 
         private void GenerateRoom()
@@ -160,19 +161,94 @@ namespace Assets.Scripts.ProceduralSystem
 
         private void GenerateGraph()
         {
-            throw new System.NotImplementedException();
+            this.roomGraph = new HashSet<EdgeNode>();
+
+            var triangles = this.delaunator.GetTriangles();
+            foreach(var triangle in triangles)
+            {
+                var mainNodes = new List<FloorNode>();
+                foreach(var point in triangle.Points)
+                {
+                    mainNodes.Add(this.floorNodes.Find(node => Vector3.Distance(node.rect.center , point.ToVector3()) < 0.3f));
+                }
+
+                var edges = new List<EdgeNode>
+                {
+                    new EdgeNode(mainNodes[0],mainNodes[1]),
+                    new EdgeNode(mainNodes[1],mainNodes[2]),
+                    new EdgeNode(mainNodes[0],mainNodes[2])
+                };
+
+                this.roomGraph.UnionWith(edges);
+            }
         }
 
-        public void MinSpanningTree()
+
+        public void MinimumSpanningTree(IEnumerable<EdgeNode> graph)
         {
-            throw new System.NotImplementedException();
+            List<EdgeNode> ans = new List<EdgeNode>();
+
+            List<EdgeNode> edges = new List<EdgeNode>(graph);
+            edges.Sort(EdgeNode.LengthComparison);
+
+            HashSet<FloorNode> points = new HashSet<FloorNode>();
+            foreach (var edge in edges)
+            {
+                points.Add(edge.a);
+                points.Add(edge.b);
+            }
+
+            Dictionary<FloorNode, FloorNode> parents = new Dictionary<FloorNode, FloorNode>();
+            foreach (var point in points)
+                parents[point] = point;
+
+            FloorNode UnionFind(FloorNode x)
+            {
+                if (parents[x] != x)
+                    parents[x] = UnionFind(parents[x]);
+                return parents[x];
+            }
+
+            foreach (var edge in edges)
+            {
+                var x = UnionFind(edge.a);
+                var y = UnionFind(edge.b);
+                if (x != y)
+                {
+                    ans.Add(edge);
+                    parents[x] = y;
+                }
+            }
+
+            this.treeEdgeNodes = ans;
         }
 
+        public List<Vector2> interesectionPoints = new List<Vector2>();
         public void DetermineHallway()
         {
-            throw new System.NotImplementedException();
+            var hallWayThickness = 5f;
+
+            this.hallWayRects = new List<Rect>();
+            this.jointRects = new List<Rect>();
+           
+            foreach(var edge in this.treeEdgeNodes)
+            {
+                var aRect = edge.a.rect;
+                var bRect = edge.b.rect;
+                var intersectionPoint = edge.FindRectanularIntersection();
+                var joint = new Rect(intersectionPoint.x - hallWayThickness / 2, intersectionPoint.y - hallWayThickness / 2, hallWayThickness, hallWayThickness);
+
+                var aHallway = EdgeNode.RectBetweemTwoRects(aRect, joint , hallWayThickness);
+                var bHallway = EdgeNode.RectBetweemTwoRects(bRect, joint , hallWayThickness);
+
+                this.jointRects.Add(joint);
+                this.hallWayRects.Add(aHallway);
+                this.hallWayRects.Add(bHallway);
+            }
         }
 
+        public List<Rect> hallWayRects;
+        public List<Rect> jointRects;
 
         /// <summary>
         /// Check out TKdev's algorithm
@@ -203,5 +279,6 @@ namespace Assets.Scripts.ProceduralSystem
         private float RoundM(float value , float pixelSize){
             return Mathf.Floor(((value + pixelSize - 1)/pixelSize))*pixelSize;
         }
+
     }
 }
