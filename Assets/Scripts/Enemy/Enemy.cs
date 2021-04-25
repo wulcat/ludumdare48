@@ -13,15 +13,19 @@ public class Enemy : MonoBehaviour
     public AudioSource audioSource;
     public List<AudioClip> hitClips = new List<AudioClip>();
     public AudioClip deathClip;
+    [HideInInspector]
+    public bool isAlive = true;
+    public EnemyShoot enemyShoot;
+    public EnemyMovement enemyMovement;
     // Start is called before the first frame update
     void Start()
     {
         currentHp = maxHp;
         objectPooler = ObjectPooler.instance;
         pool = objectPooler.pools[1];
-        if (GetComponent<EnemyShoot>())
+        if (enemyShoot)
         {
-            GetComponent<EnemyShoot>().damage = gunDamage;
+            enemyShoot.damage = gunDamage;
         }
     }
 
@@ -46,32 +50,44 @@ public class Enemy : MonoBehaviour
 
     IEnumerator Die()
     {
+        isAlive = false;
         audioSource.clip = deathClip;
         audioSource.Play();
         GetComponent<Collider>().enabled = false;
-        if (GetComponentInParent<EnemyMovement>())
+        if (enemyMovement)
         {
-            if (GetComponentInParent<EnemyMovement>().enabled)
+            if (enemyMovement.enabled)
             {
-                GetComponentInParent<EnemyMovement>().enabled = false;
-                DropWitch();
+                enemyMovement.enabled = false;
             }
         }
         while (audioSource.isPlaying)
         {
             yield return new WaitForSeconds(.2f);
         }
+        DropWitch();
         gameObject.SetActive(false);
     }
 
     void DropWitch()
     {
-        witchObject.transform.position = new Vector3(transform.position.x, witchObject.GetComponent<BoxCollider>().size.y / 2, transform.position.z);
+        enemyShoot.animator.SetTrigger("InAir");
     }
 
     public void PlayHitAudio()
     {
         audioSource.clip = hitClips[Random.Range(0, hitClips.Count - 1)];
         audioSource.Play();
+    }
+    
+    public void SetInAirToTrue()
+    {
+        enemyShoot.inAir = true;
+    }
+
+    public void SetInAirToFalse()
+    {
+        enemyShoot.inAir = false;
+        witchObject.transform.position = new Vector3(transform.position.x, -0.34f, transform.position.z);
     }
 }

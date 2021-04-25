@@ -418,7 +418,7 @@ Transform:
   m_LocalPosition: {x: -1.1, y: 0.47, z: 1.48}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1730448572}
+  - {fileID: 1531709357}
   - {fileID: 327120339}
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -517,6 +517,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 477891bcdc8269a419e9c368a1fa3ebd, type: 3}
   - {fileID: 8300000, guid: 4bc256127d41ca148a83d08a608502af, type: 3}
   deathClip: {fileID: 8300000, guid: a393f7063fc1f4a46999700e50a8b2e6, type: 3}
+  isAlive: 1
+  enemyShoot: {fileID: 1730448574}
+  enemyMovement: {fileID: 290393493}
 --- !u!82 &327120342
 AudioSource:
   m_ObjectHideFlags: 0
@@ -965,6 +968,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1531709356
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1531709357}
+  m_Layer: 0
+  m_Name: Witch
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1531709357
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531709356}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1730448572}
+  m_Father: {fileID: 290393490}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1589440785
 GameObject:
   m_ObjectHideFlags: 0
@@ -1222,7 +1256,7 @@ Transform:
   m_Children:
   - {fileID: 607620954}
   - {fileID: 1646017728}
-  m_Father: {fileID: 290393490}
+  m_Father: {fileID: 1531709357}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1730448573
@@ -1264,6 +1298,9 @@ MonoBehaviour:
     prefab: {fileID: 0}
     size: 0
   animator: {fileID: 1730448577}
+  bear: {fileID: 327120341}
+  inAirPlayed: 0
+  inAir: 0
 --- !u!114 &1730448575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1277,7 +1314,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHp: 10
-  witchObject: {fileID: 0}
+  witchObject: {fileID: 1531709356}
   gunDamage: 10
   audioSource: {fileID: 1730448576}
   hitClips:
@@ -1285,6 +1322,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 477891bcdc8269a419e9c368a1fa3ebd, type: 3}
   - {fileID: 8300000, guid: 4bc256127d41ca148a83d08a608502af, type: 3}
   deathClip: {fileID: 8300000, guid: fba70753690bb214f9f08b86a14978f5, type: 3}
+  isAlive: 1
+  enemyShoot: {fileID: 1730448574}
+  enemyMovement: {fileID: 0}
 --- !u!82 &1730448576
 AudioSource:
   m_ObjectHideFlags: 0
