@@ -478,9 +478,9 @@ TextureImporter:
       name: mute
       rect:
         serializedVersion: 2
-        x: 813
+        x: 805
         y: 802
-        width: 128
+        width: 156
         height: 44
       alignment: 1
       pivot: {x: 0, y: 1}

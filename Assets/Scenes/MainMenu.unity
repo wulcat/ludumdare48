@@ -943,10 +943,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3426482872044286402, guid: fbf136cb16327ec4eb1cfc8e80ff7c64, type: 3}
-      propertyPath: numbers.Array.size
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 6145091278905431392, guid: fbf136cb16327ec4eb1cfc8e80ff7c64, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1964,9 +1960,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3440015753863368809, guid: 82084eac9be944840919f67228e63979, type: 3}
+      propertyPath: mute
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3440015753863368810, guid: 82084eac9be944840919f67228e63979, type: 3}
       propertyPath: m_Name
       value: AudioManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 3440015753863368810, guid: 82084eac9be944840919f67228e63979, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 82084eac9be944840919f67228e63979, type: 3}

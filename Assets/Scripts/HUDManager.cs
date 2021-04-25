@@ -18,6 +18,8 @@ public class HUDManager : MonoBehaviour
     public Image tens;
     public Image ones;
     public Sprite[] numbers;
+    public Sprite[] mutes;
+    public Image mute;
 
     private void Awake()
     {
@@ -34,7 +36,7 @@ public class HUDManager : MonoBehaviour
 
     void Start()
     {
-        startMuteText.text = AudioManager.instance.mute ? "Un\nmute" : "Mute"; //The text on Start
+        mute.sprite = AudioManager.instance.mute ? mutes[1] : mutes[0]; //The text on Start
     }
 
     public void Updateammo(int amount)
@@ -45,6 +47,7 @@ public class HUDManager : MonoBehaviour
     public void Mute()
     {
         AudioManager.instance.Mute();
+        mute.sprite = AudioManager.instance.mute ? mutes[1] : mutes[0];
     }
 
 
