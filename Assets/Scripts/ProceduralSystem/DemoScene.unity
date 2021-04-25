@@ -215,7 +215,7 @@ Transform:
   m_GameObject: {fileID: 41772010}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -4.5, z: 0}
-  m_LocalScale: {x: 11.31, y: 33.95, z: 20}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -348,7 +348,7 @@ Camera:
   m_GameObject: {fileID: 1763078820}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 3
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -595,46 +595,6 @@ PrefabInstance:
     - target: {fileID: 305622676835714268, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
-      propertyPath: setting.tileSize
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
-      propertyPath: dungeon.config.hallWayThickness
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
-      propertyPath: dungeonConfigs.Array.data[0].hallWayThickness
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
-      propertyPath: dungeonConfigs.Array.data[0].distanceBetweenMainRoom
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
-      propertyPath: dungeonConfigs.Array.data[0].enemyPrefabs.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
-      propertyPath: dungeonConfigs.Array.data[0].roomGenerateSizeRange.max
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
-      propertyPath: dungeonConfigs.Array.data[0].roomGenerateSizeRange.min
-      value: 22
-      objectReference: {fileID: 0}
-    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
-      propertyPath: dungeonConfigs.Array.data[0].enemyPrefabs.Array.data[0]
-      value: 
-      objectReference: {fileID: 8751305881384165794, guid: 4af6ed92c8efa644d9d700b1599e7a59, type: 3}
-    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
-      propertyPath: dungeonConfigs.Array.data[0].roomGenerateCountRange.max
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
-      propertyPath: dungeonConfigs.Array.data[0].roomGenerateCountRange.min
-      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
