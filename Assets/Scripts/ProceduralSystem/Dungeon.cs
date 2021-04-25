@@ -496,7 +496,7 @@ namespace Assets.Scripts.ProceduralSystem
                 if (floor.isMain) {
                     if(!floor.rect.Overlaps(entryPoint) && !floor.rect.Overlaps(exitRect))
                     {
-                        spawnPoints.Add(new Vector3(floor.rect.center.x, 0, floor.rect.center.y));
+                        spawnPoints.Add(new Vector3(floor.rect.center.x, .8f, floor.rect.center.y));
                     }
                 }
             }

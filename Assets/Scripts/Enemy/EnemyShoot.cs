@@ -31,6 +31,7 @@ public class EnemyShoot : MonoBehaviour
     public bool inAirPlayed = false;
     [HideInInspector]
     public bool inAir = false;
+    public float ToShootRange = 100;
 
     private bool mIsInit = false;
     public void Initialize()
@@ -50,7 +51,7 @@ public class EnemyShoot : MonoBehaviour
         if (!this.mIsInit)
             return;
 
-        if (Time.time >= _canShoot && enemy.isAlive && !inAir)
+        if (Time.time >= _canShoot && enemy.isAlive && !inAir && Vector3.Distance(transform.position, GameManager.instance.player.transform.position) <= ToShootRange)
         {
             animator.SetTrigger("Shoot");
             _canShoot = Time.time + (1 / fireRate);
