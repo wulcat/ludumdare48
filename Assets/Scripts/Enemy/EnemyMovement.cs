@@ -98,7 +98,6 @@ public class EnemyMovement : MonoBehaviour
 
     void CalculateNewWaitTime()
     {
-        print("aikaa");
         if (ifRandomWaitTime)
         {
             canNewTarget = Random.Range(randomWaitMin, randomWaitMax) + Time.time;

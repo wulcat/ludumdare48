@@ -29,7 +29,7 @@ public class EnemyShoot : MonoBehaviour
     {
         if (Time.time >= _canShoot)
         {
-            //Shoot();
+            Shoot();
             _canShoot = Time.time + (1 / fireRate);
         }
         TurnTurret();
@@ -37,9 +37,10 @@ public class EnemyShoot : MonoBehaviour
 
     void Shoot()
     {
+        bulletSpawn.LookAt(player.transform);
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
-        //bullet.GetComponent<Bullet>().speed = bulletSpeed;
-        audioSource.Play();
+        bullet.GetComponent<Bullet>().speed = bulletSpeed;
+        //audioSource.Play();
     }
 
     void TurnTurret()
