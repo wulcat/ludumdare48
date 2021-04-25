@@ -606,7 +606,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
       propertyPath: dungeonConfigs.Array.data[0].hallWayThickness
-      value: 15
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
+      propertyPath: dungeonConfigs.Array.data[0].distanceBetweenMainRoom
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
+      propertyPath: dungeonConfigs.Array.data[0].roomGenerateSizeRange.max
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
+      propertyPath: dungeonConfigs.Array.data[0].roomGenerateSizeRange.min
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
+      propertyPath: dungeonConfigs.Array.data[0].roomGenerateCountRange.max
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
+      propertyPath: dungeonConfigs.Array.data[0].roomGenerateCountRange.min
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}

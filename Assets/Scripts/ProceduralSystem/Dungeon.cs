@@ -5,7 +5,6 @@ using System.Collections;
 using DelaunatorSharp;
 using DelaunatorSharp.Unity.Extensions;
 using ClipperLib;
-using System.Collections.Generic;
 
 // References: https://www.gamasutra.com/blogs/AAdonaac/20150903/252889/Procedural_Dungeon_Generation_Algorithm.php
 
