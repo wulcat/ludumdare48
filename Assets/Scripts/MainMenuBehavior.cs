@@ -8,7 +8,7 @@ public class MainMenuBehavior : MonoBehaviour
 {
     public static void NewGame()
     {
-        SceneManager.LoadScene("Level 1"); //assuming level 1 name
+        SceneManager.LoadScene("DemoScene"); //assuming level 1 name
     }
 
     public static void QuitGame()

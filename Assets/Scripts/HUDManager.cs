@@ -10,10 +10,7 @@ public class HUDManager : MonoBehaviour
 {
     public static HUDManager instance = null;
 
-    public TMP_Text health;
-    public TMP_Text ammo;
     public GameObject pauseMenu;
-    public TMP_Text startMuteText;
     public Image hundreds;
     public Image tens;
     public Image ones;
@@ -31,7 +28,7 @@ public class HUDManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        DontDestroyOnLoad(this);
+        //DontDestroyOnLoad(this);
     }
 
     void Start()
@@ -39,10 +36,10 @@ public class HUDManager : MonoBehaviour
         mute.sprite = AudioManager.instance.mute ? mutes[1] : mutes[0]; //The text on Start
     }
 
-    public void Updateammo(int amount)
-    {
-        ammo.text = amount.ToString(); //update current ammo count to HUD
-    }
+    //public void Updateammo(int amount)
+    //{
+    //    ammo.text = amount.ToString(); //update current ammo count to HUD
+    //}
 
     public void Mute()
     {
@@ -82,7 +79,7 @@ public class HUDManager : MonoBehaviour
 
     private void GameOver()
     {
-        health.text = "Dead";
+        //health.text = "Dead";
     }
 
     public void Resume()
@@ -93,7 +90,9 @@ public class HUDManager : MonoBehaviour
 
     public void Exit()
     {
+        Time.timeScale = 1;
         SceneManager.LoadScene("MainMenu");
+        Destroy(gameObject);
     }
 
     public void Pause()
