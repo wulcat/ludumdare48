@@ -68,6 +68,7 @@ namespace Assets.Scripts.ProceduralSystem
             //DrawRoomJoints();
 
             //DrawClip();
+            DrawEntryExitPoint();
         }
 
         private void DrawRooms()
@@ -280,6 +281,12 @@ namespace Assets.Scripts.ProceduralSystem
                 }
             }
 
+        }
+        private void DrawEntryExitPoint()
+        {
+            Gizmos.color = Color.black;
+            Gizmos.DrawWireSphere(this.dungeon.entryPoint, 2f);
+            Gizmos.DrawWireSphere(this.dungeon.exitPoint, 2f);
         }
     }
 }

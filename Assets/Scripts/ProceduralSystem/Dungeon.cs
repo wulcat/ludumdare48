@@ -68,9 +68,8 @@ namespace Assets.Scripts.ProceduralSystem
             ExtendRectSize(1.2f);
             ClipPaths();
             InstantiateWalls();
-            FindEntryPoint();
-            FindExitPoint();
-            FindSpawnPoint();
+            FindEntryExitPoint();
+            FindRoomSpawnPoints();
 
             SpawnPlayer();
             SpawnEnemies();
@@ -424,80 +423,43 @@ namespace Assets.Scripts.ProceduralSystem
             }
         }
 
-        private void FindEntryPoint()
+        private void FindEntryExitPoint()
         {
-            var leastPositionedWalls = new List<Transform>();
-            var leastEntryXValue = 9999f;
-            
-            // find the least x
-            for(var i = 0; i < this.wallClones.Count; i++)
+            var currentLeastFloorNode = this.floorNodes[0];
+            var currentExtremeFloorNode = this.floorNodes[0];
+
+            for(var i = 1; i < this.floorNodes.Count;i++)
             {
-                if(this.wallClones[i].position.x < leastEntryXValue)
+                if (this.floorNodes[i].isMain)
                 {
-                    leastEntryXValue = this.wallClones[i].position.x;
+                    if (this.floorNodes[i].rect.center.x < currentLeastFloorNode.rect.center.x)
+                    {
+                        currentLeastFloorNode = this.floorNodes[i];
+                    }
+
+                    if (this.floorNodes[i].rect.center.x > currentExtremeFloorNode.rect.center.x)
+                    {
+                        currentExtremeFloorNode = this.floorNodes[i];
+                    }
                 }
             }
 
-            // find all the blocks in least x
-            foreach(var wall in this.wallClones)
-            {
-                if(AreNumberEqual(wall.position.x , leastEntryXValue))
-                {
-                    leastPositionedWalls.Add(wall);
-                }
-            }
+            currentLeastFloorNode.isUsed = true;
+            currentExtremeFloorNode.isUsed = true;
 
-            // 
-            var centerXIndex = (int)(leastPositionedWalls.Count / 2);
-            leastPositionedWalls[centerXIndex].gameObject.SetActive(false);
-
-            this.entryPoint = leastPositionedWalls[centerXIndex].position;
+            this.entryPoint = new Vector3(currentLeastFloorNode.rect.center.x , 0 , currentLeastFloorNode.rect.center.y);
+            this.exitPoint = new Vector3(currentExtremeFloorNode.rect.center.x, 0, currentExtremeFloorNode.rect.center.y);
         }
 
-        private void FindExitPoint()
-        {
-            var maxPositionedWalls = new List<Transform>();
-            var maxEntryXValue = -9999f;
-
-            // find the least x
-            for (var i = 0; i < this.wallClones.Count; i++)
-            {
-                if (this.wallClones[i].position.x > maxEntryXValue)
-                {
-                    maxEntryXValue = this.wallClones[i].position.x;
-                }
-            }
-
-            // find all the blocks in least x
-            foreach (var wall in this.wallClones)
-            {
-                if (AreNumberEqual(wall.position.x, maxEntryXValue))
-                {
-                    maxPositionedWalls.Add(wall);
-                }
-            }
-
-            // 
-            var centerXIndex = (int)(maxPositionedWalls.Count / 2);
-            maxPositionedWalls[centerXIndex].gameObject.SetActive(false);
-
-            this.exitPoint = maxPositionedWalls[centerXIndex].position;
-        }
-
-        private void FindSpawnPoint()
+        private void FindRoomSpawnPoints()
         {
             this.spawnPoints = new List<Vector3>();
 
-            var entryPoint = new Rect(this.entryPoint.x, this.entryPoint.z, 5, 5);
-            var exitRect = new Rect(this.exitPoint.x, this.exitPoint.z, 5, 5);            
-
             foreach (var floor in this.floorNodes)
             {
-                if (floor.isMain) {
-                    if(!floor.rect.Overlaps(entryPoint) && !floor.rect.Overlaps(exitRect))
-                    {
-                        spawnPoints.Add(new Vector3(floor.rect.center.x, 0, floor.rect.center.y));
-                    }
+                if (floor.isMain && !floor.isUsed)
+                {   
+                    spawnPoints.Add(new Vector3(floor.rect.center.x, 0, floor.rect.center.y));   
                 }
             }
         }
@@ -512,9 +474,6 @@ namespace Assets.Scripts.ProceduralSystem
         {
             for(var i = 0; i < this.spawnPoints.Count; i++)
             {
-                //var enemyPrefab = this.config.enemyPrefabs[UnityEngine.Random.Range(0 , this.config.enemyPrefabs.Count - 1)];
-                //var clone = GameObject.Instantiate(enemyPrefab);
-                //clone.transform.position = this.spawnPoints[i];
                 var clone = ObjectPooler.instance.SpawnFromPool("Enemy", this.spawnPoints[i], Quaternion.identity, ObjectPooler.instance.pools[4]);
                 clone.GetComponentInChildren<EnemyShoot>().Initialize();
             }

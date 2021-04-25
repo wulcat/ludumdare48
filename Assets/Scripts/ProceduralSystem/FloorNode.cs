@@ -12,6 +12,7 @@ namespace Assets.Scripts.ProceduralSystem
         public int id;
         public Rect rect;
         public bool isMain = false;
+        public bool isUsed = false;
 
         public FloorNode(int id , Rect rect)
         {
