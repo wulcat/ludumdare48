@@ -23,6 +23,7 @@ public class EnemyMovement : MonoBehaviour
     public bool ifTargetDistanceRandom;
     public float targetDistanceMax;
     public LayerMask layerMask;
+    public Animator animator;
 
     Vector3 target;
     float canNewTarget;
@@ -89,6 +90,7 @@ public class EnemyMovement : MonoBehaviour
     {
         while (transform.position.x != targetVector.x || transform.position.z != targetVector.z)
         {
+            animator.SetBool("isMoving", true);
             float step = speed * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, targetVector, step);
             if(!enabled)
@@ -97,6 +99,7 @@ public class EnemyMovement : MonoBehaviour
             }
             yield return new WaitForSeconds(.002f);
         }
+        animator.SetBool("isMoving", false);
         CalculateNewWaitTime();
     }
 

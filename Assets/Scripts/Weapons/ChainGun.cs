@@ -27,7 +27,7 @@ public class ChainGun : MonoBehaviour, IGun
     public Transform MuzzleTransform { get { return muzzleTransform; } set { muzzleTransform = value; } }
     [SerializeField]
     private GameObject model;
-
+    public LayerMask layerMask;
     private float canShoot = 0;
     private float currentBarrelSpeed = 0;
 
@@ -55,12 +55,16 @@ public class ChainGun : MonoBehaviour, IGun
                 audioSource.Play();
                 muzzle.SetActive(true);
                 RaycastHit hit;
-                if (Physics.Raycast(muzzleTransform.position, muzzleTransform.forward, out hit, Mathf.Infinity))
+                if (Physics.Raycast(muzzleTransform.position, muzzleTransform.forward, out hit, Mathf.Infinity, layerMask))
                 {
                     Debug.DrawRay(muzzleTransform.position, muzzleTransform.forward * hit.distance, Color.red, 2f);
                     if (hit.transform.CompareTag("Enemy"))
                     {
-                        hit.transform.GetComponent<Enemy>().TakeDamage(damage);
+                        hit.transform.GetComponent<Enemy>().TakeDamage(damage, hit.point);
+                    }
+                    else
+                    {
+                        ObjectPooler.instance.SpawnFromPool("WallParticles", hit.point, hit.transform.rotation, ObjectPooler.instance.pools[2]);
                     }
                 }
                 else

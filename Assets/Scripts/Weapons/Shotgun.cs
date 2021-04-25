@@ -27,6 +27,7 @@ public class Shotgun : MonoBehaviour, IGun
     public Transform MuzzleTransform { get { return muzzleTransform; }set { muzzleTransform = value; } }
 
     private float canShoot = 0;
+    public LayerMask layerMask;
 
     public void Reload()
     {
@@ -59,12 +60,16 @@ public class Shotgun : MonoBehaviour, IGun
                 muzzleTransform.localEulerAngles += new Vector3(0, dir, 0);
             }
             RaycastHit hit;
-            if (Physics.Raycast(muzzleTransform.position, muzzleTransform.forward, out hit, Mathf.Infinity))
+            if (Physics.Raycast(muzzleTransform.position, muzzleTransform.forward, out hit, Mathf.Infinity, layerMask))
             {
                 Debug.DrawRay(muzzleTransform.position, muzzleTransform.forward * hit.distance, Color.red, 2f);
                 if(hit.transform.CompareTag("Enemy"))
                 {
-                    hit.transform.GetComponent<Enemy>().TakeDamage(damage);
+                    hit.transform.GetComponent<Enemy>().TakeDamage(damage, hit.point);
+                }
+                else
+                {
+                    ObjectPooler.instance.SpawnFromPool("WallParticles", hit.point, hit.transform.rotation, ObjectPooler.instance.pools[2]);
                 }
             }
             else

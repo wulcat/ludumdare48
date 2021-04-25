@@ -54,6 +54,9 @@ MonoBehaviour:
   audioSource: {fileID: 542381212373368388}
   muzzleTransform: {fileID: 542381213144173413}
   model: {fileID: 542381212466899691}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 119
 --- !u!82 &542381212373368388
 AudioSource:
   m_ObjectHideFlags: 0

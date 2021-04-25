@@ -24,6 +24,7 @@ public class EnemyShoot : MonoBehaviour
     public ObjectPooler.Pool bulletPool;
     GameObject player;
     ObjectPooler objectPooler;
+    public Animator animator;
     void Start()
     {
         _canShoot = 1 / fireRate;
@@ -37,13 +38,13 @@ public class EnemyShoot : MonoBehaviour
     {
         if (Time.time >= _canShoot)
         {
-            Shoot();
+            animator.SetTrigger("Shoot");
             _canShoot = Time.time + (1 / fireRate);
         }
         TurnTurret();
     }
 
-    void Shoot()
+    public void Shoot()
     {
         bulletSpawn.LookAt(player.transform);
         GameObject bullet = objectPooler.SpawnFromPool("Bullet", bulletSpawn.transform.position, bulletSpawn.transform.rotation, bulletPool);

@@ -51,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
 
     void RotatePlayer()
     {
-        Vector3 turnEuler = new Vector3(0, turn.x, 0) * turnSpeed * Time.fixedDeltaTime;
-        rb.angularVelocity = turnEuler;
+        Vector3 turnEuler = transform.localEulerAngles + new Vector3(0, turn.x, 0) * turnSpeed * Time.fixedDeltaTime;
+        rb.MoveRotation(Quaternion.Euler(turnEuler));
     }
 }

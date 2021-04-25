@@ -52,6 +52,9 @@ MonoBehaviour:
   muzzle: {fileID: 2488359157562064480}
   audioSource: {fileID: 5791320680963339423}
   muzzleTransform: {fileID: 5791320682002416062}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!82 &5791320680963339423
 AudioSource:
   m_ObjectHideFlags: 0

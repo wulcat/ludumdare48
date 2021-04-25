@@ -26,7 +26,6 @@ public class Player : MonoBehaviour
     
     public void TakeDamage(float value)
     {
-        print("auts");
         if(currentHealth - value > 0)
         {
             currentHealth -= value;
