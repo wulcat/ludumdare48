@@ -9,7 +9,7 @@ using DelaunatorSharp.Unity.Extensions;
 
 namespace Assets.Scripts.ProceduralSystem
 {
-    //[Serializable]
+    [Serializable]
     public class Dungeon : IDungeon
     {
         public Gateway startGateway;
@@ -34,7 +34,8 @@ namespace Assets.Scripts.ProceduralSystem
 
         //
         public Delaunator delaunator;
-        public RoomNode roomGraph;
+        public HashSet<EdgeNode> roomGraph;
+        public List<EdgeNode> treeEdgeNodes;
 
         public Dungeon(DungeonConfig config , float tileSize)
         {
@@ -48,8 +49,8 @@ namespace Assets.Scripts.ProceduralSystem
             yield return SeparateRoom(simulationCube);
             DetermineMainRooms();
             TriangulateRoom();
-            //GenerateGraph();
-            //MinSpanningTree();
+            GenerateGraph();
+            MinimumSpanningTree(this.roomGraph);
             //DetermineHallway();
         }
 
@@ -160,12 +161,66 @@ namespace Assets.Scripts.ProceduralSystem
 
         private void GenerateGraph()
         {
-            throw new System.NotImplementedException();
+            this.roomGraph = new HashSet<EdgeNode>();
+
+            var triangles = this.delaunator.GetTriangles();
+            foreach(var triangle in triangles)
+            {
+                var mainNodes = new List<FloorNode>();
+                foreach(var point in triangle.Points)
+                {
+                    mainNodes.Add(this.floorNodes.Find(node => Vector3.Distance(node.rect.center , point.ToVector3()) < 0.3f));
+                }
+
+                var edges = new List<EdgeNode>
+                {
+                    new EdgeNode(mainNodes[0],mainNodes[1]),
+                    new EdgeNode(mainNodes[1],mainNodes[2]),
+                    new EdgeNode(mainNodes[0],mainNodes[2])
+                };
+
+                this.roomGraph.UnionWith(edges);
+            }
         }
 
-        public void MinSpanningTree()
+
+        public void MinimumSpanningTree(IEnumerable<EdgeNode> graph)
         {
-            throw new System.NotImplementedException();
+            List<EdgeNode> ans = new List<EdgeNode>();
+
+            List<EdgeNode> edges = new List<EdgeNode>(graph);
+            edges.Sort(EdgeNode.LengthComparison);
+
+            HashSet<FloorNode> points = new HashSet<FloorNode>();
+            foreach (var edge in edges)
+            {
+                points.Add(edge.a);
+                points.Add(edge.b);
+            }
+
+            Dictionary<FloorNode, FloorNode> parents = new Dictionary<FloorNode, FloorNode>();
+            foreach (var point in points)
+                parents[point] = point;
+
+            FloorNode UnionFind(FloorNode x)
+            {
+                if (parents[x] != x)
+                    parents[x] = UnionFind(parents[x]);
+                return parents[x];
+            }
+
+            foreach (var edge in edges)
+            {
+                var x = UnionFind(edge.a);
+                var y = UnionFind(edge.b);
+                if (x != y)
+                {
+                    ans.Add(edge);
+                    parents[x] = y;
+                }
+            }
+
+            this.treeEdgeNodes = ans;
         }
 
         public void DetermineHallway()
@@ -203,5 +258,6 @@ namespace Assets.Scripts.ProceduralSystem
         private float RoundM(float value , float pixelSize){
             return Mathf.Floor(((value + pixelSize - 1)/pixelSize))*pixelSize;
         }
+
     }
 }
