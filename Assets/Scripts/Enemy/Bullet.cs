@@ -8,6 +8,8 @@ public class Bullet : MonoBehaviour
     public float speed = 1;
     public AudioSource audioSource;
     public GameObject explosion;
+    [HideInInspector]
+    public float damage;
 
     // Update is called once per frame
     void Update()
@@ -19,17 +21,12 @@ public class Bullet : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-
+            other.GetComponentInParent<Player>().TakeDamage(damage);
+            ObjectPooler.instance.DestroyObject("Bullet", gameObject);
         }
-        if (other.CompareTag("Bullet"))
+        if (other.CompareTag("Wall"))
         {
-
-        }
-        else
-        {
-            //Instantiate(explosion, transform.position, Quaternion.identity);
-            //audioSource.Play();
-            Destroy(gameObject);
+            ObjectPooler.instance.DestroyObject("Bullet", gameObject);
         }
     }
 }

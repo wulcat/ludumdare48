@@ -91,6 +91,10 @@ public class EnemyMovement : MonoBehaviour
         {
             float step = speed * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, targetVector, step);
+            if(!enabled)
+            {
+                break;
+            }
             yield return new WaitForSeconds(.002f);
         }
         CalculateNewWaitTime();

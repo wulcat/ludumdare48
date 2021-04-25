@@ -18,7 +18,10 @@ public class EnemyShoot : MonoBehaviour
     public float turnSpeed = 1;
 
     float _canShoot;
-
+    [HideInInspector]
+    public float damage;
+    [HideInInspector]
+    public ObjectPooler.Pool bulletPool;
     GameObject player;
     ObjectPooler objectPooler;
     void Start()
@@ -26,6 +29,7 @@ public class EnemyShoot : MonoBehaviour
         _canShoot = 1 / fireRate;
         player = GameManager.instance.player;
         objectPooler = ObjectPooler.instance;
+        bulletPool = objectPooler.pools[0];
     }
 
     // Update is called once per frame
@@ -42,8 +46,10 @@ public class EnemyShoot : MonoBehaviour
     void Shoot()
     {
         bulletSpawn.LookAt(player.transform);
-        GameObject bullet = objectPooler.SpawnFromPool("Bullet", bulletSpawn.transform.position, bulletSpawn.transform.rotation);
-        bullet.GetComponent<Bullet>().speed = bulletSpeed;
+        GameObject bullet = objectPooler.SpawnFromPool("Bullet", bulletSpawn.transform.position, bulletSpawn.transform.rotation, bulletPool);
+        Bullet b = bullet.GetComponent<Bullet>();
+        b.speed = bulletSpeed;
+        b.damage = damage;
         //audioSource.Play();
     }
 
