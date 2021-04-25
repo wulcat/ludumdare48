@@ -14,6 +14,10 @@ public class HUDManager : MonoBehaviour
     public TMP_Text ammo;
     public GameObject pauseMenu;
     public TMP_Text startMuteText;
+    public Image hundreds;
+    public Image tens;
+    public Image ones;
+    public Sprite[] numbers;
 
     private void Awake()
     {
@@ -30,8 +34,6 @@ public class HUDManager : MonoBehaviour
 
     void Start()
     {
-        health.text = 100.ToString();
-        ammo.text = 5.ToString();
         startMuteText.text = AudioManager.instance.mute ? "Un\nmute" : "Mute"; //The text on Start
     }
 
@@ -48,7 +50,31 @@ public class HUDManager : MonoBehaviour
 
     public void Updatehealth(int amount)
     {
-        health.text = amount.ToString(); //update current health to HUD from Player
+        char[] a = amount.ToString().ToCharArray();
+        List<int> i = new List<int>();
+        foreach (var item in a)
+        {
+            i.Add(int.Parse(item.ToString()));
+        }
+
+        if (i.Count == 3)
+        {
+            hundreds.sprite = numbers[i[0]];
+            tens.sprite = numbers[i[1]];
+            ones.sprite = numbers[i[2]];
+        }
+        else if (i.Count == 2)
+        {
+            hundreds.gameObject.SetActive(false);
+            tens.sprite = numbers[i[0]];
+            ones.sprite = numbers[i[1]];
+        }
+        else
+        {
+            hundreds.gameObject.SetActive(false);
+            tens.gameObject.SetActive(false);
+            ones.sprite = numbers[i[0]];
+        }
     }
 
     private void GameOver()
