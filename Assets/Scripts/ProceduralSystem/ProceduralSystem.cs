@@ -52,7 +52,7 @@ namespace Assets.Scripts.ProceduralSystem
             if (this.dungeon == null || this.dungeon.floorNodes == null)
                 return;
 
-            Gizmos.DrawWireSphere(transform.position, this.dungeon.config.dungeonRadius);
+            //Gizmos.DrawWireSphere(transform.position, this.dungeon.config.dungeonRadius);
 
             //DrawRooms();
             //DrawTriangulation();
@@ -62,12 +62,12 @@ namespace Assets.Scripts.ProceduralSystem
                 return;
 
             //DrawMinTreeSpan();
-            DrawIntersections();
+            //DrawIntersections();
             //DrawMainRoom();
             //DrawHallwayRect();
             //DrawRoomJoints();
 
-            DrawClip();
+            //DrawClip();
         }
 
         private void DrawRooms()
