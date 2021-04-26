@@ -14,10 +14,14 @@ namespace Assets.Scripts.ProceduralSystem
         public float distanceBetweenMainRoom = 5;
         public float hallWayThickness = 5;
 
-        public GameObject floorPrefab;
-        public GameObject wallPrefab;
+        
 
         public FloatRangeValue enemyCountRange;
+
+        public GameObject floorPrefab;
+        public GameObject wallPrefab;
+        public GameObject portalPrefab;
+
         public List<GameObject> enemyPrefabs;
         public List<GameObject> bossPrefabs;
     }

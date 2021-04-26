@@ -66,11 +66,12 @@ MonoBehaviour:
         max: 1
       distanceBetweenMainRoom: 5
       hallWayThickness: 5
-      floorPrefab: {fileID: 0}
-      wallPrefab: {fileID: 0}
       enemyCountRange:
         min: 0
         max: 1
+      floorPrefab: {fileID: 0}
+      wallPrefab: {fileID: 0}
+      portalPrefab: {fileID: 0}
       enemyPrefabs: []
       bossPrefabs: []
     entryPoint: {x: 0, y: 0, z: 0}
@@ -80,21 +81,24 @@ MonoBehaviour:
     hallWayRects: []
     jointRects: []
   dungeonConfigs:
-  - dungeonRadius: 60
+  - dungeonRadius: 50
     minMainRoomCount: 10
     roomGenerateCountRange:
       min: 20
       max: 30
     roomGenerateSizeRange:
-      min: 20
-      max: 30
+      min: 10
+      max: 20
     distanceBetweenMainRoom: 1
-    hallWayThickness: 15
-    floorPrefab: {fileID: 4316510683940650739, guid: a05d922c0fadea94591ef7a6bb36284a, type: 3}
-    wallPrefab: {fileID: 782215604920625019, guid: 80d30b669e3e01a489a7fc6614267164, type: 3}
+    hallWayThickness: 10
     enemyCountRange:
       min: 0
-      max: 1
+      max: 5
+    floorPrefab: {fileID: 4316510683940650739, guid: a05d922c0fadea94591ef7a6bb36284a, type: 3}
+    wallPrefab: {fileID: 782215604920625019, guid: 80d30b669e3e01a489a7fc6614267164, type: 3}
+    portalPrefab: {fileID: 4306620057296367511, guid: 8d6f0e344a55b694eb835700ecd0988e, type: 3}
     enemyPrefabs:
-    - {fileID: 8751305881384165794, guid: 4af6ed92c8efa644d9d700b1599e7a59, type: 3}
+    - {fileID: 6673432686143828349, guid: 6e25f414213f1714e8b936059ddfdc02, type: 3}
+    - {fileID: 6673432686143828349, guid: 9100e18d25b360445a974510f2792690, type: 3}
+    - {fileID: 6673432686143828349, guid: c1ac047fe549dbc43ac4f3dfef426bb5, type: 3}
     bossPrefabs: []

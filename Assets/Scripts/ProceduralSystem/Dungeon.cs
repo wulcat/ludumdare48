@@ -80,9 +80,11 @@ namespace Assets.Scripts.ProceduralSystem
 
             InstantiateWalls();
             yield return InstantiateFloors();
+            InstantiateExitPortal();
 
             SpawnPlayer(yAxis);
-            SpawnEnemies();
+            SpawnEnemies(yAxis);
+            
 
             this.isReady = true;
         }
@@ -447,6 +449,23 @@ namespace Assets.Scripts.ProceduralSystem
             }
         }
 
+        private void InstantiateExitPortal()
+        {
+            
+
+            foreach(var floor in this.floorClones)
+            {
+                if(Vector3.Distance(floor.transform.position , exitPoint) < 1)
+                {
+                    var clone = GameObject.Instantiate(this.config.portalPrefab);
+
+                    clone.transform.position = floor.transform.position;
+                    GameObject.Destroy(floor);
+                    break;
+                }
+            }
+        }
+
         private IEnumerator CheckAndExpand(Vector3 point)
         {
             var casts = Physics.SphereCastAll(point, 0.5f , Vector3.up, this.obstacleMask);
@@ -536,14 +555,18 @@ namespace Assets.Scripts.ProceduralSystem
             player.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
         }
 
-        private void SpawnEnemies()
+        private void SpawnEnemies(float yAxis)
         {
             for(var i = 0; i < this.spawnPoints.Count; i++)
             {
+                var spawnPosition = spawnPoints[i];
+
                 var clone = UnityEngine.Object.Instantiate(config.enemyPrefabs[UnityEngine.Random.Range(0, config.enemyPrefabs.Count)], spawnPoints[i], Quaternion.identity);//ObjectPooler.instance.SpawnFromPool("Enemy", this.spawnPoints[i], Quaternion.identity, ObjectPooler.instance.pools[4]);
                 if(clone.GetComponentInChildren<EnemyShoot>())
                 {
                     clone.GetComponentInChildren<EnemyShoot>().Initialize();
+
+                    clone.transform.position = new Vector3(spawnPosition.x, 0.2f + yAxis + clone.GetComponent<EnemyData>().aboveGround, spawnPosition.z);
                 }
             }
         }
