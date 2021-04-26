@@ -70,7 +70,7 @@ public class Shotgun : MonoBehaviour, IGun
                 }
                 else
                 {
-                    objectPooler.SpawnFromPool("WallParticles", hit.point, hit.transform.rotation, objectPooler.pools[2]);
+                    objectPooler.SpawnFromPool("WallParticles", hit.point, Quaternion.Euler(new Vector3(0,hit.transform.position.y,0)), objectPooler.pools[2]);
                 }
                 GameObject obj = objectPooler.SpawnFromPool("BulletTrail", muzzleTransform.position, Quaternion.identity, objectPooler.pools[3]);
                 BulletTrail bulletTrail = obj.GetComponent<BulletTrail>();

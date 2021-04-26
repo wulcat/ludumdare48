@@ -12,6 +12,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Outline
+    second: {fileID: 2100000, guid: 3c62c13ad88f7ae4ab97fb7e2ca966bf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Shotgun
     second: {fileID: 2100000, guid: afd8b57ee293a2043beb97c1e2f7dcce, type: 2}
   materials:
@@ -51,8 +56,8 @@ ModelImporter:
     sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
-    importCameras: 0
-    importLights: 0
+    importCameras: 1
+    importLights: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
     generateSecondaryUV: 0

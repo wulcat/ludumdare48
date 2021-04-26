@@ -46,7 +46,6 @@ public class Player : MonoBehaviour
             currentHealth -= value;
             audioSource.clip = gruntSounds[Random.Range(0, gruntSounds.Count - 1)];
             audioSource.Play();
-            HUDManager.instance.Updatehealth((int)currentHealth);
             print(currentHealth.ToString());
         }
         else
@@ -54,6 +53,7 @@ public class Player : MonoBehaviour
             currentHealth = 0;
             Die();
         }
+        HUDManager.instance.Updatehealth((int)currentHealth);
     }
 
     void Die()

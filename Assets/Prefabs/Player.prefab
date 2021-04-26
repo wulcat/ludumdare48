@@ -90,6 +90,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 64850afb9ae6ef040a914f0095ec5a02, type: 3}
   - {fileID: 8300000, guid: 7e4d9207317094f45a54fa0f57b8e486, type: 3}
   - {fileID: 8300000, guid: c5e8b148336d7d048a7287a98b833fef, type: 3}
+  getHitAgainTime: 1
 --- !u!114 &5715997916789937355
 MonoBehaviour:
   m_ObjectHideFlags: 0
