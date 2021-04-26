@@ -11,5 +11,6 @@ namespace Assets.Scripts.ProceduralSystem
         /// </summary>
         public float tileSize = 4f;
         public GameObject simulationCubePrefab;
+        public LayerMask obstacleMask;
     }
 }

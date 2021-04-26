@@ -37,13 +37,28 @@ namespace Assets.Scripts.ProceduralSystem
         {
             CreateDungeon(this.dungeonConfigs[0]);
         }
+        //private Vector3 testPOint;
+        //private void Update()
+        //{
+        //    if (!pIsReady)
+        //        return;
+
+        //    var position = this.dungeon.treeEdgeNodes[0].a.rect.center;
+        //    this.testPOint = new Vector3(position.x, 0, position.y);
+
+        //    var casts = Physics.SphereCastAll(this.testPOint, 2, Vector3.up, this.setting.obstacleMask);
+        //    if (casts.Length > 0)
+        //    {
+        //        Debug.Log("casts "+casts[0].transform.name);
+        //    }
+        //}
 
         /// <summary>
         /// Genearte the dungeon
         /// </summary>
         public void CreateDungeon(DungeonConfig config)
         {
-            var dungeon = new Dungeon(config , this.setting.tileSize);
+            var dungeon = new Dungeon(config , this.setting.tileSize, this.setting.obstacleMask);
 
             StartCoroutine(dungeon.Generate(this.setting.simulationCubePrefab));
 
@@ -90,6 +105,10 @@ namespace Assets.Scripts.ProceduralSystem
 
             //DrawClip();
             DrawEntryExitPoint();
+
+            //Gizmos.DrawWireCube(this.testPOint, new Vector3(4, 4, 4));
+            //Gizmos.DrawWireSphere(this.testPOint + Vector3.zero * 0, 4);
+            //if (Physics.SphereCast(this.testPOint, 4, Vector3.zero, out hit, 0, this.setting.obstacleMask))
         }
 
         private void DrawRooms()
