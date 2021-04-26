@@ -51,6 +51,7 @@ namespace Assets.Scripts.ProceduralSystem
 
         private List<Transform> wallClones;
         private List<GameObject> floorClones;
+        private List<GameObject> enemyClones;
 
         private GameObject mDungeonContainer;
         private LayerMask obstacleMask;
@@ -566,7 +567,8 @@ namespace Assets.Scripts.ProceduralSystem
 
         private void SpawnEnemies(float yAxis)
         {
-            for(var i = 0; i < this.spawnPoints.Count; i++)
+            this.enemyClones = new List<GameObject>();
+            for (var i = 0; i < this.spawnPoints.Count; i++)
             {
                 var spawnPosition = spawnPoints[i];
 
@@ -576,7 +578,16 @@ namespace Assets.Scripts.ProceduralSystem
                     clone.GetComponentInChildren<EnemyShoot>().Initialize();
 
                     clone.transform.position = new Vector3(spawnPosition.x, 0.2f + yAxis + clone.GetComponent<EnemyData>().aboveGround, spawnPosition.z);
+                    this.enemyClones.Add(clone);
                 }
+            }
+        }
+
+        public void DestroyEnemies()
+        {
+            foreach(var enemy in this.enemyClones)
+            {
+                GameObject.Destroy(enemy);
             }
         }
 

@@ -63,7 +63,7 @@ MonoBehaviour:
     enemyCountRange:
       min: 0
       max: 5
-    floorPrefab: {fileID: 4316510683940650739, guid: a05d922c0fadea94591ef7a6bb36284a, type: 3}
+    floorPrefab: {fileID: 1687902973600427789, guid: e02bd22309872214c8597c8c5c28587c, type: 3}
     wallPrefab: {fileID: 782215604920625019, guid: 80d30b669e3e01a489a7fc6614267164, type: 3}
     portalPrefab: {fileID: 4306620057296367511, guid: 8d6f0e344a55b694eb835700ecd0988e, type: 3}
     enemyPrefabs:
@@ -71,3 +71,4 @@ MonoBehaviour:
     - {fileID: 6673432686143828349, guid: 9100e18d25b360445a974510f2792690, type: 3}
     - {fileID: 6673432686143828349, guid: c1ac047fe549dbc43ac4f3dfef426bb5, type: 3}
     bossPrefabs: []
+  currentYAxis: 0

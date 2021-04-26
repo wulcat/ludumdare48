@@ -16,7 +16,7 @@ namespace Assets.Scripts.ProceduralSystem
         public List<DungeonConfig> dungeonConfigs;
         public static ProceduralSystem Instance;
 
-        private float currentYAxis = 0;
+        public float currentYAxis = 0;
         public bool pIsReady
         {
             get
@@ -84,6 +84,8 @@ namespace Assets.Scripts.ProceduralSystem
         {
             if (this.nextDungeon != null && this.nextDungeon.isReady)
             {
+                this.dungeon.DestroyEnemies();
+
                 this.dungeon = this.nextDungeon;
                 this.dungeon.Spawn(this.currentYAxis - 50);
 

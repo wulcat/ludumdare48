@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts.ProceduralSystem;
 
 public class Enemy : MonoBehaviour
 {
@@ -94,6 +95,6 @@ public class Enemy : MonoBehaviour
     public void SetInAirToFalse()
     {
         enemyShoot.inAir = false;
-        witchObject.transform.position = new Vector3(transform.position.x, -0.8f, transform.position.z);
+        witchObject.transform.position = new Vector3(transform.position.x, GameManager.instance.player.transform.position.y - 1.8f , transform.position.z);
     }
 }
