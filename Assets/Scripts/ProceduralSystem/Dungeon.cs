@@ -576,10 +576,10 @@ namespace Assets.Scripts.ProceduralSystem
                 if(clone.GetComponentInChildren<EnemyShoot>())
                 {
                     clone.GetComponentInChildren<EnemyShoot>().Initialize();
-
-                    clone.transform.position = new Vector3(spawnPosition.x, 0.2f + yAxis + clone.GetComponent<EnemyData>().aboveGround, spawnPosition.z);
-                    this.enemyClones.Add(clone);
                 }
+
+                clone.transform.position = new Vector3(spawnPosition.x, 0.2f + yAxis + clone.GetComponent<EnemyData>().aboveGround, spawnPosition.z);
+                this.enemyClones.Add(clone);
             }
         }
 
