@@ -11,7 +11,28 @@ namespace Assets.Scripts.ProceduralSystem
         public ProceduralSetting setting;
         public Dungeon dungeon;
         public List<DungeonConfig> dungeonConfigs;
+        public static ProceduralSystem Instance;
 
+        public bool pIsReady
+        {
+            get
+            {
+                if(this.dungeon == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return this.dungeon.isReady;
+                }
+                
+            }
+        }
+
+        private void Awake()
+        {
+            ProceduralSystem.Instance = this;
+        }
         public void Start()
         {
             CreateDungeon(this.dungeonConfigs[0]);
