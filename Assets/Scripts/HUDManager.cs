@@ -47,11 +47,13 @@ public class HUDManager : MonoBehaviour
 
     IEnumerator Loading()
     {
-        while(!Assets.Scripts.ProceduralSystem.ProceduralSystem.Instance.pIsReady)
+        GameManager.instance.canMove = false;
+        while (!Assets.Scripts.ProceduralSystem.ProceduralSystem.Instance.pIsReady)
         {
             yield return null;
         }
 
+        GameManager.instance.canMove = true;
         GameObject.Find("LoadingScreen").SetActive(false);
                 
     }

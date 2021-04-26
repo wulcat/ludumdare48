@@ -28,6 +28,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!GameManager.instance.canMove)
+            return;
         MovePlayer();
         RotatePlayer();
     }

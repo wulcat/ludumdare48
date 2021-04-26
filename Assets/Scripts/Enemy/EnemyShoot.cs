@@ -66,7 +66,10 @@ public class EnemyShoot : MonoBehaviour
         Bullet b = bullet.GetComponent<Bullet>();
         b.speed = bulletSpeed;
         b.damage = damage;
-        //audioSource.Play();
+        if(audioSource)
+        {
+            audioSource.Play();
+        }
     }
 
     void TurnTurret()

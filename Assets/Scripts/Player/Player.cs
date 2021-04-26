@@ -46,7 +46,6 @@ public class Player : MonoBehaviour
             currentHealth -= value;
             audioSource.clip = gruntSounds[Random.Range(0, gruntSounds.Count - 1)];
             audioSource.Play();
-            print(currentHealth.ToString());
         }
         else
         {
