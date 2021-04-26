@@ -540,9 +540,11 @@ namespace Assets.Scripts.ProceduralSystem
         {
             for(var i = 0; i < this.spawnPoints.Count; i++)
             {
-                var clone = ObjectPooler.instance.SpawnFromPool("Enemy", this.spawnPoints[i], Quaternion.identity, ObjectPooler.instance.pools[4]);
-                clone.GetComponentInChildren<EnemyShoot>().Initialize();
-
+                var clone = UnityEngine.Object.Instantiate(config.enemyPrefabs[UnityEngine.Random.Range(0, config.enemyPrefabs.Count)], spawnPoints[i], Quaternion.identity);//ObjectPooler.instance.SpawnFromPool("Enemy", this.spawnPoints[i], Quaternion.identity, ObjectPooler.instance.pools[4]);
+                if(clone.GetComponentInChildren<EnemyShoot>())
+                {
+                    clone.GetComponentInChildren<EnemyShoot>().Initialize();
+                }
             }
         }
 

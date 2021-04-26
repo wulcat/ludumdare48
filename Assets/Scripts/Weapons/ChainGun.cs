@@ -115,4 +115,10 @@ public class ChainGun : MonoBehaviour, IGun
             currentBarrelSpeed = 0;
         }
     }
+
+    public void SwitchIn()
+    {
+        currentBarrelSpeed = 0;
+        UnShoot();
+    }
 }

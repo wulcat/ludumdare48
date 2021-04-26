@@ -10,16 +10,16 @@ public class HUDManager : MonoBehaviour
 {
     public static HUDManager instance = null;
 
-    public TMP_Text health;
-    public TMP_Text ammo;
     public GameObject pauseMenu;
-    public TMP_Text startMuteText;
     public Image hundreds;
     public Image tens;
     public Image ones;
     public Sprite[] numbers;
     public Sprite[] mutes;
     public Image mute;
+    public Sprite[] deads;
+    public GameObject gameOverMenu;
+    public Image youDied;
 
     private void Awake()
     {
@@ -31,17 +31,31 @@ public class HUDManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        DontDestroyOnLoad(this);
+        //DontDestroyOnLoad(this);
     }
 
     void Start()
     {
         mute.sprite = AudioManager.instance.mute ? mutes[1] : mutes[0]; //The text on Start
+        StartCoroutine(Loading());
     }
 
-    public void Updateammo(int amount)
+    //public void Updateammo(int amount)
+    //{
+    //    ammo.text = amount.ToString(); //update current ammo count to HUD
+    //}
+
+    IEnumerator Loading()
     {
-        ammo.text = amount.ToString(); //update current ammo count to HUD
+        GameManager.instance.canMove = false;
+        while (!Assets.Scripts.ProceduralSystem.ProceduralSystem.Instance.pIsReady)
+        {
+            yield return null;
+        }
+
+        GameManager.instance.canMove = true;
+        GameObject.Find("LoadingScreen").SetActive(false);
+                
     }
 
     public void Mute()
@@ -80,9 +94,12 @@ public class HUDManager : MonoBehaviour
         }
     }
 
-    private void GameOver()
+    public void GameOver()
     {
-        health.text = "Dead";
+        youDied.sprite = deads[UnityEngine.Random.Range(0, 3)];
+        Time.timeScale = 0;
+        GameObject.Find("MainThemeAudio").GetComponent<AudioSource>().mute = true;
+        gameOverMenu.SetActive(true);
     }
 
     public void Resume()
@@ -93,13 +110,21 @@ public class HUDManager : MonoBehaviour
 
     public void Exit()
     {
+        Time.timeScale = 1;
         SceneManager.LoadScene("MainMenu");
+        Destroy(gameObject);
     }
 
     public void Pause()
     {
         Time.timeScale = 0;
         pauseMenu.SetActive(true);
+    }
+
+    public void TryAgain() //try again after death
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name); //reload current scene
     }
 
     //public void LoseHealth(int amount) //take damage for amount

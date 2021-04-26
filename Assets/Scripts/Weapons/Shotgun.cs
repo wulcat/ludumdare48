@@ -116,4 +116,9 @@ public class Shotgun : MonoBehaviour, IGun
     {
         
     }
+
+    public void SwitchIn()
+    {
+        muzzle.SetActive(false);
+    }
 }
