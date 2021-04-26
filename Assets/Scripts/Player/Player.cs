@@ -58,7 +58,7 @@ public class Player : MonoBehaviour
 
     void Die()
     {
-        print("dieded");
+        HUDManager.instance.GameOver();
     }
 
     private void OnTriggerEnter(Collider other)

@@ -17,6 +17,9 @@ public class HUDManager : MonoBehaviour
     public Sprite[] numbers;
     public Sprite[] mutes;
     public Image mute;
+    public Sprite[] deads;
+    public GameObject gameOverMenu;
+    public Image youDied;
 
     private void Awake()
     {
@@ -77,9 +80,12 @@ public class HUDManager : MonoBehaviour
         }
     }
 
-    private void GameOver()
+    public void GameOver()
     {
-        //health.text = "Dead";
+        youDied.sprite = deads[UnityEngine.Random.Range(0, 3)];
+        Time.timeScale = 0;
+        GameObject.Find("MainThemeAudio").GetComponent<AudioSource>().mute = true;
+        gameOverMenu.SetActive(true);
     }
 
     public void Resume()
@@ -99,6 +105,12 @@ public class HUDManager : MonoBehaviour
     {
         Time.timeScale = 0;
         pauseMenu.SetActive(true);
+    }
+
+    public void TryAgain() //try again after death
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name); //reload current scene
     }
 
     //public void LoseHealth(int amount) //take damage for amount
