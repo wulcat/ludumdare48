@@ -37,12 +37,24 @@ public class HUDManager : MonoBehaviour
     void Start()
     {
         mute.sprite = AudioManager.instance.mute ? mutes[1] : mutes[0]; //The text on Start
+        StartCoroutine(Loading());
     }
 
     //public void Updateammo(int amount)
     //{
     //    ammo.text = amount.ToString(); //update current ammo count to HUD
     //}
+
+    IEnumerator Loading()
+    {
+        while(!Assets.Scripts.ProceduralSystem.ProceduralSystem.Instance.pIsReady)
+        {
+            yield return null;
+        }
+
+        GameObject.Find("LoadingScreen").SetActive(false);
+                
+    }
 
     public void Mute()
     {
