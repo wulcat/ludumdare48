@@ -1286,50 +1286,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
-      propertyPath: dungeonConfigs.Array.data[0].dungeonRadius
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
-      propertyPath: dungeonConfigs.Array.data[0].hallWayThickness
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
-      propertyPath: dungeonConfigs.Array.data[0].minMainRoomCount
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
-      propertyPath: dungeonConfigs.Array.data[0].enemyCountRange.max
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
-      propertyPath: dungeonConfigs.Array.data[0].distanceBetweenMainRoom
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
-      propertyPath: dungeonConfigs.Array.data[0].enemyPrefabs.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
-      propertyPath: dungeonConfigs.Array.data[0].roomGenerateSizeRange.max
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
-      propertyPath: dungeonConfigs.Array.data[0].roomGenerateSizeRange.min
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
-      propertyPath: dungeonConfigs.Array.data[0].enemyPrefabs.Array.data[0]
-      value: 
-      objectReference: {fileID: 6673432686143828349, guid: 6e25f414213f1714e8b936059ddfdc02, type: 3}
-    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
-      propertyPath: dungeonConfigs.Array.data[0].enemyPrefabs.Array.data[1]
-      value: 
-      objectReference: {fileID: 6673432686143828349, guid: 9100e18d25b360445a974510f2792690, type: 3}
-    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
-      propertyPath: dungeonConfigs.Array.data[0].enemyPrefabs.Array.data[2]
-      value: 
-      objectReference: {fileID: 6673432686143828349, guid: c1ac047fe549dbc43ac4f3dfef426bb5, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
 --- !u!4 &314158578543114262
