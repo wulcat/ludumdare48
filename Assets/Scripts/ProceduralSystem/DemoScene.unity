@@ -301,14 +301,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 618696181579062367, guid: fbf136cb16327ec4eb1cfc8e80ff7c64, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 3426482872044286402, guid: fbf136cb16327ec4eb1cfc8e80ff7c64, type: 3}
-      propertyPath: youDied
-      value: 
-      objectReference: {fileID: 855046886}
     - target: {fileID: 6145091278905431392, guid: fbf136cb16327ec4eb1cfc8e80ff7c64, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -640,17 +632,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &855046886 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 618696181579062367, guid: fbf136cb16327ec4eb1cfc8e80ff7c64, type: 3}
-  m_PrefabInstance: {fileID: 703965379}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &973680825
 GameObject:
   m_ObjectHideFlags: 0
