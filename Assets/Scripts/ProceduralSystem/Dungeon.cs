@@ -50,6 +50,8 @@ namespace Assets.Scripts.ProceduralSystem
         public Paths clipperOutput;
 
         private List<Transform> wallClones;
+        private List<GameObject> floorClones;
+
         private GameObject mDungeonContainer;
         private LayerMask obstacleMask;
 
@@ -61,7 +63,7 @@ namespace Assets.Scripts.ProceduralSystem
             this.mDungeonContainer = new GameObject("Dungeon");
         }
 
-        public IEnumerator Generate(GameObject simulationCube)
+        public IEnumerator Generate(GameObject simulationCube, float yAxis)
         {
             GenerateRoom();
             yield return SeparateRoom(simulationCube);
@@ -79,8 +81,8 @@ namespace Assets.Scripts.ProceduralSystem
             InstantiateWalls();
             yield return InstantiateFloors();
 
-            //SpawnPlayer();
-            //SpawnEnemies();
+            SpawnPlayer(yAxis);
+            SpawnEnemies();
 
             this.isReady = true;
         }
@@ -430,15 +432,19 @@ namespace Assets.Scripts.ProceduralSystem
             }
         }
 
-        List<GameObject> floors;
-
+    
         private IEnumerator InstantiateFloors()
         {
-            this.floors = new List<GameObject>();
+            this.floorClones = new List<GameObject>();
 
             var position = this.treeEdgeNodes[0].a.rect.center;
 
             yield return CheckAndExpand(new Vector3(RoundM(position.x,1) , 0 , RoundM(position.y,1)));
+
+            foreach(var floor in this.floorClones)
+            {
+                GameObject.Destroy(floor.GetComponent<BoxCollider>());
+            }
         }
 
         private IEnumerator CheckAndExpand(Vector3 point)
@@ -450,7 +456,7 @@ namespace Assets.Scripts.ProceduralSystem
                 clone.transform.position = point;
                 clone.transform.SetParent(this.mDungeonContainer.transform);
 
-                this.floors.Add(clone);
+                this.floorClones.Add(clone);
 
                 var leftPoint = new Vector3(point.x - 4, 0, point.z);
                 var rightPoint = new Vector3(point.x + 4, 0, point.z);
@@ -459,10 +465,10 @@ namespace Assets.Scripts.ProceduralSystem
 
                 yield return new WaitForFixedUpdate();
 
-                yield return CheckAndExpand(leftPoint);
-                yield return CheckAndExpand(rightPoint);
                 yield return CheckAndExpand(upPoint);
                 yield return CheckAndExpand(downPoint);
+                yield return CheckAndExpand(leftPoint);
+                yield return CheckAndExpand(rightPoint);       
             }
             else
             {
@@ -524,9 +530,9 @@ namespace Assets.Scripts.ProceduralSystem
             }
         }
 
-        private void SpawnPlayer() {
+        private void SpawnPlayer(float yAxis) {
             var player = GameManager.instance.player.transform;
-            player.position = new Vector3(this.entryPoint.x , 1 , this.entryPoint.z);
+            player.position = new Vector3(this.entryPoint.x , yAxis + 1, this.entryPoint.z);
             player.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
         }
 
@@ -536,6 +542,7 @@ namespace Assets.Scripts.ProceduralSystem
             {
                 var clone = ObjectPooler.instance.SpawnFromPool("Enemy", this.spawnPoints[i], Quaternion.identity, ObjectPooler.instance.pools[4]);
                 clone.GetComponentInChildren<EnemyShoot>().Initialize();
+
             }
         }
 

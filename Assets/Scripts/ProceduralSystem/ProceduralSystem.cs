@@ -13,6 +13,7 @@ namespace Assets.Scripts.ProceduralSystem
         public List<DungeonConfig> dungeonConfigs;
         public static ProceduralSystem Instance;
 
+        private float currentYAxis = 0;
         public bool pIsReady
         {
             get
@@ -60,7 +61,7 @@ namespace Assets.Scripts.ProceduralSystem
         {
             var dungeon = new Dungeon(config , this.setting.tileSize, this.setting.obstacleMask);
 
-            StartCoroutine(dungeon.Generate(this.setting.simulationCubePrefab));
+            StartCoroutine(dungeon.Generate(this.setting.simulationCubePrefab,this.currentYAxis));
 
             this.dungeon = dungeon;
         }
