@@ -9,7 +9,10 @@ namespace Assets.Scripts.ProceduralSystem
     public class ProceduralSystem : MonoBehaviour
     {
         public ProceduralSetting setting;
-        public Dungeon dungeon;
+
+        private Dungeon dungeon;
+        private Dungeon nextDungeon;
+
         public List<DungeonConfig> dungeonConfigs;
         public static ProceduralSystem Instance;
 
@@ -36,34 +39,57 @@ namespace Assets.Scripts.ProceduralSystem
         }
         public void Start()
         {
-            CreateDungeon(this.dungeonConfigs[0]);
+            CreateDungeon(this.dungeonConfigs[0] , true);
+            //CreateDungeon(this.dungeonConfigs[0], false);
         }
-        //private Vector3 testPOint;
-        //private void Update()
-        //{
-        //    if (!pIsReady)
-        //        return;
 
-        //    var position = this.dungeon.treeEdgeNodes[0].a.rect.center;
-        //    this.testPOint = new Vector3(position.x, 0, position.y);
+        private void Update()
+        {
+            if (!pIsReady)
+                return;
 
-        //    var casts = Physics.SphereCastAll(this.testPOint, 2, Vector3.up, this.setting.obstacleMask);
-        //    if (casts.Length > 0)
-        //    {
-        //        Debug.Log("casts "+casts[0].transform.name);
-        //    }
-        //}
+            if(this.dungeon.isReady && this.nextDungeon == null)
+            {
+                CreateDungeon(this.dungeonConfigs[0], false);
+            }
+
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                GoToNextLevel();
+            }
+        }
 
         /// <summary>
         /// Genearte the dungeon
         /// </summary>
-        public void CreateDungeon(DungeonConfig config)
+        public void CreateDungeon(DungeonConfig config , bool isSpawn)
         {
             var dungeon = new Dungeon(config , this.setting.tileSize, this.setting.obstacleMask);
 
-            StartCoroutine(dungeon.Generate(this.setting.simulationCubePrefab,this.currentYAxis));
+            StartCoroutine(dungeon.Generate(this.setting.simulationCubePrefab,this.currentYAxis , isSpawn));
 
-            this.dungeon = dungeon;
+            if (isSpawn)
+            {
+                this.dungeon = dungeon;
+            }
+            else
+            {
+                this.nextDungeon = dungeon;
+            }
+            this.currentYAxis += 50;
+        }
+
+
+        public void GoToNextLevel()
+        {
+            if (this.nextDungeon != null && this.nextDungeon.isReady)
+            {
+                this.dungeon = this.nextDungeon;
+                this.dungeon.Spawn(this.currentYAxis - 50);
+
+
+                this.nextDungeon = null;
+            }
         }
 
         /// <summary>

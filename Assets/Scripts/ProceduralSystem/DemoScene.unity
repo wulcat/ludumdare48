@@ -1292,6 +1292,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
       propertyPath: dungeonConfigs.Array.data[0].hallWayThickness
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
+      propertyPath: dungeonConfigs.Array.data[0].minMainRoomCount
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
@@ -1308,11 +1312,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
       propertyPath: dungeonConfigs.Array.data[0].roomGenerateSizeRange.max
-      value: 20
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
       propertyPath: dungeonConfigs.Array.data[0].roomGenerateSizeRange.min
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
       propertyPath: dungeonConfigs.Array.data[0].enemyPrefabs.Array.data[0]

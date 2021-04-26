@@ -63,7 +63,7 @@ namespace Assets.Scripts.ProceduralSystem
             this.mDungeonContainer = new GameObject("Dungeon");
         }
 
-        public IEnumerator Generate(GameObject simulationCube, float yAxis)
+        public IEnumerator Generate(GameObject simulationCube, float yAxis , bool isSpawn)
         {
             GenerateRoom();
             yield return SeparateRoom(simulationCube);
@@ -78,15 +78,22 @@ namespace Assets.Scripts.ProceduralSystem
             FindEntryExitPoint();
             FindRoomSpawnPoints();
 
-            InstantiateWalls();
-            yield return InstantiateFloors();
-            InstantiateExitPortal();
+            InstantiateWalls(yAxis);
+            yield return InstantiateFloors(yAxis);
+            InstantiateExitPortal(yAxis);
 
-            SpawnPlayer(yAxis);
-            SpawnEnemies(yAxis);
-            
+            //SpawnPlayer(yAxis);
+            //SpawnEnemies(yAxis);
+            if(isSpawn)
+                Spawn(yAxis);
 
             this.isReady = true;
+        }
+
+        public void Spawn(float yAxis)
+        {
+            SpawnPlayer(yAxis);
+            SpawnEnemies(yAxis);
         }
 
 
@@ -407,7 +414,7 @@ namespace Assets.Scripts.ProceduralSystem
             //Debug.Log("Tree Count: "+solution.Count);
         }
 
-        private void InstantiateWalls()
+        private void InstantiateWalls(float yAxis)
         {
             this.wallClones = new List<Transform>();
 
@@ -420,7 +427,8 @@ namespace Assets.Scripts.ProceduralSystem
                     InstantiateWallBetweenPoints(
                         new Vector2(previousPoint.X, previousPoint.Y),
                         new Vector2(path[i].X, path[i].Y),
-                        this.mTileSize
+                        this.mTileSize,
+                        yAxis
                     );
 
                     previousPoint = path[i];
@@ -429,19 +437,20 @@ namespace Assets.Scripts.ProceduralSystem
                 InstantiateWallBetweenPoints(
                     new Vector2(path[0].X, path[0].Y),
                     new Vector2(path[path.Count - 1].X, path[path.Count - 1].Y) ,
-                    this.mTileSize
+                    this.mTileSize,
+                    yAxis
                 );
             }
         }
 
     
-        private IEnumerator InstantiateFloors()
+        private IEnumerator InstantiateFloors(float yAxis)
         {
             this.floorClones = new List<GameObject>();
 
             var position = this.treeEdgeNodes[0].a.rect.center;
 
-            yield return CheckAndExpand(new Vector3(RoundM(position.x,1) , 0 , RoundM(position.y,1)));
+            yield return CheckAndExpand(new Vector3(RoundM(position.x,1) , yAxis, RoundM(position.y,1)));
 
             foreach(var floor in this.floorClones)
             {
@@ -449,13 +458,13 @@ namespace Assets.Scripts.ProceduralSystem
             }
         }
 
-        private void InstantiateExitPortal()
+        private void InstantiateExitPortal(float yAxis)
         {
             
 
             foreach(var floor in this.floorClones)
             {
-                if(Vector3.Distance(floor.transform.position , exitPoint) < 1)
+                if(Vector3.Distance(floor.transform.position , new Vector3(exitPoint.x , yAxis , exitPoint.z)) < 3)
                 {
                     var clone = GameObject.Instantiate(this.config.portalPrefab);
 
@@ -477,10 +486,10 @@ namespace Assets.Scripts.ProceduralSystem
 
                 this.floorClones.Add(clone);
 
-                var leftPoint = new Vector3(point.x - 4, 0, point.z);
-                var rightPoint = new Vector3(point.x + 4, 0, point.z);
-                var upPoint = new Vector3(point.x, 0, point.z + 4);
-                var downPoint = new Vector3(point.x, 0, point.z - 4);
+                var leftPoint = new Vector3(point.x - 4, point.y, point.z);
+                var rightPoint = new Vector3(point.x + 4, point.y, point.z);
+                var upPoint = new Vector3(point.x, point.y, point.z + 4);
+                var downPoint = new Vector3(point.x, point.y, point.z - 4);
 
                 yield return new WaitForFixedUpdate();
 
@@ -578,7 +587,7 @@ namespace Assets.Scripts.ProceduralSystem
             return Mathf.Abs(Mathf.Abs(a) - Mathf.Abs(b)) < diff;
         }
 
-        private void InstantiateWallBetweenPoints(Vector2 pointA , Vector2 pointB , float distanceBetween)
+        private void InstantiateWallBetweenPoints(Vector2 pointA , Vector2 pointB , float distanceBetween , float yAxis)
         {
             var angle = 45f;
             var direction = 1;
@@ -625,7 +634,7 @@ namespace Assets.Scripts.ProceduralSystem
                 );
 
                 var wall = GameObject.Instantiate(this.config.wallPrefab);
-                wall.transform.position = new Vector3(RoundM(newPoint.x , 1), 0 , RoundM(newPoint.z,1));
+                wall.transform.position = new Vector3(RoundM(newPoint.x , 1), yAxis, RoundM(newPoint.z,1));
                 wall.transform.SetParent(this.mDungeonContainer.transform);
 
                 this.wallClones.Add(wall.transform);

@@ -8,6 +8,7 @@ TagManager:
   - Wall
   - Bullet
   - EnemyBody
+  - Portal
   layers:
   - Default
   - TransparentFX
@@ -18,8 +19,8 @@ TagManager:
   - Wall
   - Bullet
   - EnemyBody
-  - 
-  - 
+  - Wall
+  - Floor
   - 
   - 
   - 

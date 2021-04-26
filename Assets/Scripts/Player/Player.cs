@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Assets.Scripts.ProceduralSystem;
 public class Player : MonoBehaviour
 {
     [SerializeField]
@@ -62,9 +62,13 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy"))
         {
-            TakeDamage(other.GetComponent<Enemy>().touchDamage); 
+            TakeDamage(other.GetComponent<Enemy>().touchDamage);
+        }
+        if (other.CompareTag("Portal"))
+        {
+            ProceduralSystem.Instance.GoToNextLevel();
         }
     }
 

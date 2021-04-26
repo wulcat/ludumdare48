@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 2307359295066752817}
   - component: {fileID: 5971407842686703205}
   - component: {fileID: 4625242414345145786}
+  - component: {fileID: 2710770013058615941}
   m_Layer: 0
-  m_Name: Wall.012
-  m_TagString: Untagged
+  m_Name: Portal
+  m_TagString: Portal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -83,3 +84,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!135 &2710770013058615941
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4306620057296367511}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.037512466
+  m_Center: {x: 0.0048815515, y: 0.0029340922, z: 0.032062963}
