@@ -68,7 +68,10 @@ public class Enemy : MonoBehaviour
         {
             yield return new WaitForSeconds(.2f);
         }
-        DropWitch();
+        if (enemyShoot)
+        {
+            DropWitch(); 
+        }
         gameObject.SetActive(false);
     }
 
