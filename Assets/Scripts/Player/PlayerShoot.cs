@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class PlayerShoot : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject startingWeapon;
+    private GameObject currentWeaponObject;
+
+    public List<GameObject> weapons = new List<GameObject>();
+    private List<GameObject> spawnedWeapons = new List<GameObject>();
 
     private IGun currentWeapon;
+    int currentWeaponIndex = 0;
     // Start is called before the first frame update
     private void Awake()
     {
-        GameObject go = Instantiate(startingWeapon, transform);
-        currentWeapon = go.GetComponent<IGun>();
+        foreach (GameObject obj in weapons)
+        {
+            GameObject go = Instantiate(obj, transform);
+            spawnedWeapons.Add(go);
+            go.SetActive(false);
+        }
+        SpawnWeapon(spawnedWeapons[0]);
     }
 
     public void OnShoot()
@@ -23,5 +31,30 @@ public class PlayerShoot : MonoBehaviour
     public void OnUnShoot()
     {
         currentWeapon.UnShoot();
+    }
+
+    public void OnChangeWeapon()
+    {
+        if(currentWeaponIndex < weapons.Count - 1)
+        {
+            currentWeaponIndex++;
+        }
+        else
+        {
+            currentWeaponIndex = 0;
+        }
+        SpawnWeapon(spawnedWeapons[currentWeaponIndex]);
+    }
+
+    void SpawnWeapon(GameObject obj)
+    {
+        if (currentWeaponObject)
+        {
+            currentWeaponObject.SetActive(false); 
+        }
+        currentWeapon = obj.GetComponent<IGun>();
+        currentWeapon.SwitchIn();
+        currentWeaponObject = obj;
+        currentWeaponObject.SetActive(true);
     }
 }
