@@ -12,7 +12,7 @@ namespace Assets.Scripts.ProceduralSystem
 {
     using Paths = List<List<IntPoint>>;
 
-    //[Serializable]
+    [Serializable]
     public class Dungeon : IDungeon
     {
         public bool isReady = false;
@@ -50,10 +50,15 @@ namespace Assets.Scripts.ProceduralSystem
         public Paths clipperOutput;
 
         private List<Transform> wallClones;
+        private GameObject mDungeonContainer;
+        private LayerMask obstacleMask;
 
-        public Dungeon(DungeonConfig config , float tileSize) {
+        public Dungeon(DungeonConfig config , float tileSize, LayerMask obstacleMask) {
             this.config = config;
             this.mTileSize = tileSize;
+            this.obstacleMask = obstacleMask;
+
+            this.mDungeonContainer = new GameObject("Dungeon");
         }
 
         public IEnumerator Generate(GameObject simulationCube)
@@ -67,12 +72,15 @@ namespace Assets.Scripts.ProceduralSystem
             DetermineHallway();
             ExtendRectSize(1.2f);
             ClipPaths();
-            InstantiateWalls();
+
             FindEntryExitPoint();
             FindRoomSpawnPoints();
 
-            SpawnPlayer();
-            SpawnEnemies();
+            InstantiateWalls();
+            yield return InstantiateFloors();
+
+            //SpawnPlayer();
+            //SpawnEnemies();
 
             this.isReady = true;
         }
@@ -145,7 +153,6 @@ namespace Assets.Scripts.ProceduralSystem
                 GameObject.Destroy(body.gameObject);
             }
 
-            Debug.Log("Everybody is sleeping now");
         }
 
         private IEnumerator DetermineMainRooms(float minThreshold = 1.25f , int count = 0)
@@ -393,7 +400,7 @@ namespace Assets.Scripts.ProceduralSystem
 
             this.clipperOutput = solution;
 
-            Debug.Log("Tree Count: "+solution.Count);
+            //Debug.Log("Tree Count: "+solution.Count);
         }
 
         private void InstantiateWalls()
@@ -420,6 +427,59 @@ namespace Assets.Scripts.ProceduralSystem
                     new Vector2(path[path.Count - 1].X, path[path.Count - 1].Y) ,
                     this.mTileSize
                 );
+            }
+        }
+
+        List<GameObject> floors;
+
+        private IEnumerator InstantiateFloors()
+        {
+            this.floors = new List<GameObject>();
+
+            var position = this.treeEdgeNodes[0].a.rect.center;
+
+            yield return CheckAndExpand(new Vector3(RoundM(position.x,1) , 0 , RoundM(position.y,1)));
+        }
+
+        private IEnumerator CheckAndExpand(Vector3 point)
+        {
+            var casts = Physics.SphereCastAll(point, 0.5f , Vector3.up, this.obstacleMask);
+            if (casts.Length == 0)
+            {
+                var clone = GameObject.Instantiate(this.config.floorPrefab);
+                clone.transform.position = point;
+                clone.transform.SetParent(this.mDungeonContainer.transform);
+
+                this.floors.Add(clone);
+
+                var leftPoint = new Vector3(point.x - 4, 0, point.z);
+                var rightPoint = new Vector3(point.x + 4, 0, point.z);
+                var upPoint = new Vector3(point.x, 0, point.z + 4);
+                var downPoint = new Vector3(point.x, 0, point.z - 4);
+
+                yield return new WaitForFixedUpdate();
+
+                yield return CheckAndExpand(leftPoint);
+                yield return CheckAndExpand(rightPoint);
+                yield return CheckAndExpand(upPoint);
+                yield return CheckAndExpand(downPoint);
+            }
+            else
+            {
+                var isWall = false;
+                for (var i = 0; i < casts.Length; i++)
+                {
+                    if (casts[0].transform.tag == "Wall")
+                    {
+                        isWall = true;
+                    }
+                }
+                if(isWall)
+                {
+                    var clone = GameObject.Instantiate(this.config.floorPrefab);
+                    clone.transform.position = point;
+                    clone.transform.SetParent(this.mDungeonContainer.transform);
+                }
             }
         }
 
@@ -533,7 +593,8 @@ namespace Assets.Scripts.ProceduralSystem
                 );
 
                 var wall = GameObject.Instantiate(this.config.wallPrefab);
-                wall.transform.position = newPoint;
+                wall.transform.position = new Vector3(RoundM(newPoint.x , 1), 0 , RoundM(newPoint.z,1));
+                wall.transform.SetParent(this.mDungeonContainer.transform);
 
                 this.wallClones.Add(wall.transform);
 
