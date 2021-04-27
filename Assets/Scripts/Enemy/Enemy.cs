@@ -7,7 +7,7 @@ public class Enemy : MonoBehaviour
 {
     public float maxHp;
     private float currentHp;
-    public GameObject witchObject;
+    public GameObject shooter;
     public float gunDamage = 10;
     public float touchDamage = 10;
     ObjectPooler.Pool pool;
@@ -20,6 +20,7 @@ public class Enemy : MonoBehaviour
     public EnemyShoot enemyShoot;
     public EnemyMovement enemyMovement;
     public GameObject deathExplosion;
+    public float shooterAfterDropHeight = 1;
     // Start is called before the first frame update
     void Start()
     {
@@ -95,6 +96,6 @@ public class Enemy : MonoBehaviour
     public void SetInAirToFalse()
     {
         enemyShoot.inAir = false;
-        witchObject.transform.position = new Vector3(transform.position.x, GameManager.instance.player.transform.position.y - 1.8f , transform.position.z);
+        shooter.transform.position = new Vector3(transform.position.x, GameManager.instance.player.transform.position.y - shooterAfterDropHeight , transform.position.z);
     }
 }

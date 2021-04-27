@@ -25,7 +25,6 @@ public class EnemyShoot : MonoBehaviour
     GameObject player;
     ObjectPooler objectPooler;
     public Animator animator;
-    public Enemy bear;
     Enemy enemy;
     [HideInInspector]
     public bool inAirPlayed = false;
@@ -44,8 +43,12 @@ public class EnemyShoot : MonoBehaviour
 
         this.mIsInit = true; 
     }
+    
+    private void Start()
+    {
+        //Initialize();
+    }
 
-    // Update is called once per frame
     void Update()
     {
         if (!this.mIsInit)

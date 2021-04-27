@@ -646,7 +646,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 16c8419591c4c4f47bc5e59f19f07886, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.228
+  m_Volume: 0.25
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -1286,6 +1286,42 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
+      propertyPath: dungeonConfigs.Array.data[0].enemyCountRange.max
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
+      propertyPath: dungeonConfigs.Array.data[0].enemyCountRange.min
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
+      propertyPath: dungeonConfigs.Array.data[0].enemyPrefabs.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
+      propertyPath: dungeonConfigs.Array.data[0].enemyPrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 6673432686143828349, guid: 9100e18d25b360445a974510f2792690, type: 3}
+    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
+      propertyPath: dungeonConfigs.Array.data[0].enemyPrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 6673432686143828349, guid: 6e25f414213f1714e8b936059ddfdc02, type: 3}
+    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
+      propertyPath: dungeonConfigs.Array.data[0].enemyPrefabs.Array.data[2]
+      value: 
+      objectReference: {fileID: 6673432686143828349, guid: c1ac047fe549dbc43ac4f3dfef426bb5, type: 3}
+    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
+      propertyPath: dungeonConfigs.Array.data[0].enemyPrefabs.Array.data[3]
+      value: 
+      objectReference: {fileID: 4069100728751186971, guid: 8597a6bd93655db43a8d769581567e1d, type: 3}
+    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
+      propertyPath: dungeonConfigs.Array.data[0].enemyPrefabs.Array.data[4]
+      value: 
+      objectReference: {fileID: 1262852700229434947, guid: f53d4af6fdfb2ac4594b7a366a345f20, type: 3}
+    - target: {fileID: 305622676835714269, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
+      propertyPath: dungeonConfigs.Array.data[0].enemyPrefabs.Array.data[5]
+      value: 
+      objectReference: {fileID: 9131555338990928562, guid: 7e9598109ccc23c45870f19f946db36b, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b60f98b95ab28845ab85747a9426643, type: 3}
 --- !u!4 &314158578543114262
