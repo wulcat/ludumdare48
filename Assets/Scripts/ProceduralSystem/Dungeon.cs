@@ -492,7 +492,7 @@ namespace Assets.Scripts.ProceduralSystem
                 var upPoint = new Vector3(point.x, point.y, point.z + 4);
                 var downPoint = new Vector3(point.x, point.y, point.z - 4);
 
-                yield return new WaitForFixedUpdate();
+                yield return null;
 
                 yield return CheckAndExpand(upPoint);
                 yield return CheckAndExpand(downPoint);
